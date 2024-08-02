@@ -8,6 +8,7 @@ import * as request from 'supertest';
 describe('UsersController', () => {
   let app: any;
   let service: UsersService;
+  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +29,13 @@ describe('UsersController', () => {
     await app.init();
 
     service = module.get<UsersService>(UsersService);
+
+    // Mock console.error to suppress error logging during tests
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   it('should return 200 if the user already exists', async () => {
@@ -39,16 +47,11 @@ describe('UsersController', () => {
       .send({ username: 'testuser' })
       .expect(HttpStatus.OK);
 
-    expect(response.body).toEqual({
-      id: existingUser.id,
-      username: existingUser.username,
-      pictures: existingUser.pictures,
-      favorites: existingUser.favorites,
-    });
+    expect(response.body).toEqual({ token: existingUser.id });
   });
 
   it('should return 201 if the user is newly created', async () => {
-    const newUser: User = { id: 1, username: 'newuser', pictures: [], favorites: [] };
+    const newUser: User = { id: 2, username: 'newuser', pictures: [], favorites: [] };
     jest.spyOn(service, 'findUser').mockResolvedValueOnce(undefined);
     jest.spyOn(service, 'createUser').mockResolvedValueOnce(newUser);
 
@@ -57,12 +60,7 @@ describe('UsersController', () => {
       .send({ username: 'newuser' })
       .expect(HttpStatus.CREATED);
 
-    expect(response.body).toEqual({
-      id: newUser.id,
-      username: newUser.username,
-      pictures: newUser.pictures,
-      favorites: newUser.favorites,
-    });
+    expect(response.body).toEqual({ token: newUser.id });
   });
 
   it('should return 400 if the username is missing', async () => {
