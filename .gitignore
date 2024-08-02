@@ -131,4 +131,5 @@ dist
 .yarn
 .idea
 .DS_Store
+./api/yarn.locak
 
