@@ -98,4 +98,51 @@ describe('PicturesService', () => {
       await expect(service.createPicture(createPictureDto, userId)).rejects.toThrow(InternalServerErrorException);
     });
   });
+
+  describe('getPictures', () => {
+    it('should return pictures with pagination', async () => {
+      const page = 1;
+      const limit = 10;
+      const totalItems = 15;
+      const userId = 1;
+      const user: User = {
+        id: userId,
+        username: 'testuser',
+        pictures: [] as Picture[],
+        favorites: [] as Favorite[],
+      };
+      const pictures: Picture[] = [
+        {
+          id: 1,
+          createdAt: new Date(),
+          url: 'http://example.com/picture1.jpg',
+          title: 'Picture 1',
+          user,
+        },
+        {
+          id: 2,
+          createdAt: new Date(),
+          url: 'http://example.com/picture2.jpg',
+          title: 'Picture 2',
+          user,
+        },
+      ];
+
+      jest.spyOn(picturesRepository, 'findAndCount').mockResolvedValueOnce([pictures, totalItems]);
+
+      const result = await service.getPictures(page, limit);
+
+      expect(result.pictures).toEqual(pictures);
+      expect(result.totalItems).toEqual(totalItems);
+    });
+
+    it('should throw an InternalServerErrorException if there is an error fetching pictures', async () => {
+      const page = 1;
+      const limit = 10;
+
+      jest.spyOn(picturesRepository, 'findAndCount').mockRejectedValueOnce(new Error('Error fetching pictures'));
+
+      await expect(service.getPictures(page, limit)).rejects.toThrow(new InternalServerErrorException('Error fetching pictures'));
+    });
+  });
 });

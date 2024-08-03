@@ -1,76 +1,74 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, HttpStatus, ValidationPipe } from '@nestjs/common';
+import * as request from 'supertest';
 import { PicturesController } from './pictures.controller';
 import { PicturesService } from './pictures.service';
 import { UsersService } from '../users/users.service';
-import { CreatePictureDto } from './dto/create-picture.dto';
 import { AuthGuard } from '../../auth/auth.guard';
-import { ExecutionContext, HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { Response } from 'express';
+import { CreatePictureDto } from './dto/create-picture.dto';
+import { User } from '../../database/entities/user.entity';
+import { Picture } from '../../database/entities/picture.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-describe('PicturesController', () => {
-  let controller: PicturesController;
-  let service: PicturesService;
+describe('PicturesController (e2e)', () => {
+  let app: INestApplication;
+  let picturesService: PicturesService;
+  let usersService: UsersService;
+  let picturesRepository: Repository<Picture>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleFixture: TestingModule = await Test.createTestingModule({
       controllers: [PicturesController],
       providers: [
+        PicturesService,
+        AuthGuard,
         {
-          provide: PicturesService,
-          useValue: {
-            createPicture: jest.fn(),
-          },
+          provide: getRepositoryToken(Picture),
+          useClass: Repository,
         },
         {
           provide: UsersService,
           useValue: {
-            findUserById: jest.fn(),
+            findUserById: jest.fn().mockImplementation((id: number) => {
+              if (id === 1) {
+                return {
+                  id,
+                  username: 'testuser',
+                  pictures: [],
+                  favorites: [],
+                };
+              }
+              return null;
+            }),
           },
         },
       ],
-    })
-      .overrideGuard(AuthGuard)
-      .useValue({
-        canActivate: (context: ExecutionContext) => {
-          const request = context.switchToHttp().getRequest();
-          const authorizationHeader = request.headers['authorization'];
+    }).compile();
 
-          if (!authorizationHeader || isNaN(parseInt(authorizationHeader, 10))) {
-            throw new UnauthorizedException('Invalid User');
-          }
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
+    await app.init();
 
-          return true;
-        },
-      })
-      .compile();
-
-    controller = module.get<PicturesController>(PicturesController);
-    service = module.get<PicturesService>(PicturesService);
+    picturesService = moduleFixture.get<PicturesService>(PicturesService);
+    usersService = moduleFixture.get<UsersService>(UsersService);
+    picturesRepository = moduleFixture.get<Repository<Picture>>(getRepositoryToken(Picture));
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-
-  describe('sharePicture', () => {
+  describe('/pictures (POST)', () => {
     it('should return 201 when picture is shared successfully', async () => {
       const createPictureDto: CreatePictureDto = {
         url: 'http://example.com/picture.jpg',
         title: 'A beautiful sunset',
       };
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn(),
-        json: jest.fn(),
-      } as unknown as Response;
 
-      jest.spyOn(service, 'createPicture').mockResolvedValueOnce(undefined);
+      jest.spyOn(picturesService, 'createPicture').mockResolvedValueOnce(undefined);
 
-      await controller.sharePicture(createPictureDto, res, '1');
-
-      expect(service.createPicture).toHaveBeenCalledWith(createPictureDto, 1);
-      expect(res.status).toHaveBeenCalledWith(HttpStatus.CREATED);
-      expect(res.send).toHaveBeenCalled();
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', '1')
+        .send(createPictureDto)
+        .expect(HttpStatus.CREATED);
     });
 
     it('should return 400 when there is an error sharing picture', async () => {
@@ -78,19 +76,15 @@ describe('PicturesController', () => {
         url: 'http://example.com/picture.jpg',
         title: 'A beautiful sunset',
       };
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn(),
-        json: jest.fn(),
-      } as unknown as Response;
 
-      jest.spyOn(service, 'createPicture').mockRejectedValueOnce(new Error('Error sharing picture'));
+      jest.spyOn(picturesService, 'createPicture').mockRejectedValueOnce(new Error('Error sharing picture'));
 
-      await controller.sharePicture(createPictureDto, res, '1');
-
-      expect(service.createPicture).toHaveBeenCalledWith(createPictureDto, 1);
-      expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Error sharing picture' });
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', '1')
+        .send(createPictureDto)
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({ message: 'Error sharing picture' });
     });
 
     it('should return 401 when the authorization token is invalid', async () => {
@@ -98,18 +92,13 @@ describe('PicturesController', () => {
         url: 'http://example.com/picture.jpg',
         title: 'A beautiful sunset',
       };
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn(),
-        json: jest.fn(),
-      } as unknown as Response;
 
-      try {
-        await controller.sharePicture(createPictureDto, res, 'invalid-token');
-      } catch (error) {
-        expect(error).toBeInstanceOf(UnauthorizedException);
-        expect(error.message).toBe('Invalid User');
-      }
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', 'invalid-token')
+        .send(createPictureDto)
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({ message: 'Invalid token', error: 'Unauthorized', statusCode: 401 });
     });
 
     it('should return 401 when the authorization header is missing', async () => {
@@ -117,18 +106,196 @@ describe('PicturesController', () => {
         url: 'http://example.com/picture.jpg',
         title: 'A beautiful sunset',
       };
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn(),
-        json: jest.fn(),
-      } as unknown as Response;
 
-      try {
-        await controller.sharePicture(createPictureDto, res, undefined as unknown as string);
-      } catch (error) {
-        expect(error).toBeInstanceOf(UnauthorizedException);
-        expect(error.message).toBe('Invalid User');
-      }
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .send(createPictureDto)
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({ message: 'Invalid token', error: 'Unauthorized', statusCode: 401 });
+    });
+
+    it('should return 400 when URL is missing', async () => {
+      const createPictureDto: CreatePictureDto = {
+        url: '',
+        title: 'A beautiful sunset',
+      };
+
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', '1')
+        .send(createPictureDto)
+        .expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should return 400 when title is missing', async () => {
+      const createPictureDto: CreatePictureDto = {
+        url: 'http://example.com/picture.jpg',
+        title: '',
+      };
+
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', '1')
+        .send(createPictureDto)
+        .expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should return 400 when both URL and title are missing', async () => {
+      const createPictureDto: CreatePictureDto = {
+        url: '',
+        title: '',
+      };
+
+      return request(app.getHttpServer())
+        .post('/pictures')
+        .set('Authorization', '1')
+        .send(createPictureDto)
+        .expect(HttpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe('/pictures (GET)', () => {
+    it('should return 200 and pictures when pictures are fetched successfully', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: Picture[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({ pictures, totalItems: 2 });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .query({ page: 1, limit: 10 })
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+              id,
+              url,
+              title,
+              createdAt: createdAt.toISOString(), // Convert createdAt to string
+            })),
+            currentPage: 1,
+            totalPages: 1,
+            hasNextPage: false,
+          });
+        });
+    });
+
+    it('should return 400 when there is an error fetching pictures', async () => {
+      jest.spyOn(picturesService, 'getPictures').mockRejectedValueOnce(new Error('Error fetching pictures'));
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .query({ page: 1, limit: 10 })
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect({ message: 'Error fetching pictures' });
+    });
+
+    it('should return 200 and pictures when page is missing', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: Picture[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({ pictures, totalItems: 2 });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .query({ limit: 10 })
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+              id,
+              url,
+              title,
+              createdAt: createdAt.toISOString(), // Convert createdAt to string
+            })),
+            currentPage: 1,
+            totalPages: 1,
+            hasNextPage: false,
+          });
+        });
+    });
+
+    it('should return 200 and pictures when limit is missing', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: Picture[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({ pictures, totalItems: 2 });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .query({ page: 1 })
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+              id,
+              url,
+              title,
+              createdAt: createdAt.toISOString(), // Convert createdAt to string
+            })),
+            currentPage: 1,
+            totalPages: 1,
+            hasNextPage: false,
+          });
+        });
+    });
+
+    it('should return 200 and pictures when both page and limit are missing', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: Picture[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({ pictures, totalItems: 2 });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+              id,
+              url,
+              title,
+              createdAt: createdAt.toISOString(), // Convert createdAt to string
+            })),
+            currentPage: 1,
+            totalPages: 1,
+            hasNextPage: false,
+          });
+        });
+    });
+
+    it('should return 400 and indicate no more pages when pageNumber outof bound', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: Picture[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({ pictures: [], totalItems: 2 });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .query({ page: 3, limit: 10 }) // Assuming totalPages would be 1 for 2 items
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            "currentPage": "3",
+            "message": "Page number out of range",
+            "totalPages": 1,
+        });
+        });
     });
   });
 });

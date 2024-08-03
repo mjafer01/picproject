@@ -13,15 +13,26 @@ export class PicturesService {
     private usersService: UsersService,
   ) {}
 
+  async getPictures(page: number, limit: number): Promise<{ pictures: Picture[], totalItems: number }> {
+    const offset = (page - 1) * limit;
+    const [pictures, totalItems] = await this.picturesRepository.findAndCount({
+      order: {
+        createdAt: 'DESC',
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    return { pictures, totalItems };
+  }
+
   async createPicture(createPictureDto: CreatePictureDto, userId: number): Promise<Picture> {
     try {
       const user = await this.usersService.findUserById(userId);
-
       const picture = this.picturesRepository.create({
         ...createPictureDto,
         user,
       });
-
       return await this.picturesRepository.save(picture);
     } catch (error) {
       throw new InternalServerErrorException('Error creating picture');
