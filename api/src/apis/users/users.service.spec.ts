@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../../database/entities/user.entity';
+import { Picture } from '../../database/entities/picture.entity';
+import { Favorite } from '../../database/entities/favorite.entity';
 import { Repository } from 'typeorm';
 
 describe('UsersService', () => {
@@ -25,7 +27,9 @@ describe('UsersService', () => {
 
   describe('findUser', () => {
     it('should return a user if the username exists', async () => {
-      const existingUser = { id: 1, username: 'existinguser', pictures: [], favorites: [] };
+      let pictures:Picture[] =[]
+      let favorites:Favorite[] =[]
+      const existingUser = { id: 1, username: 'existinguser', pictures, favorites};
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(existingUser);
 
       const user = await service.findUser('existinguser');
@@ -44,7 +48,9 @@ describe('UsersService', () => {
 
   describe('createUser', () => {
     it('should create and return a new user', async () => {
-      const newUser = { id: 1, username: 'newuser', pictures: [], favorites: [] };
+      let pictures:Picture[] =[]
+      let favorites:Favorite[] =[]
+      const newUser = { id: 1, username: 'newuser', pictures, favorites };
       jest.spyOn(repository, 'create').mockImplementationOnce((user: User) => user);
       jest.spyOn(repository, 'save').mockImplementationOnce(async (user: User) => {
         user.id = 1;

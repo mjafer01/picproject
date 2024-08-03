@@ -5,6 +5,7 @@ import { User } from './database/entities/user.entity';
 import { Picture } from './database/entities/picture.entity';
 import { Favorite } from './database/entities/favorite.entity';
 import { UsersModule } from './apis/users/users.module';
+import { PicturesModule } from './apis/pictures/pictures.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { UsersModule } from './apis/users/users.module';
       entities: [User, Picture, Favorite],
       synchronize: true,
     }),
-    UsersModule
+    UsersModule,
+    PicturesModule
   ],
   controllers: [HealthController],
   providers: [],

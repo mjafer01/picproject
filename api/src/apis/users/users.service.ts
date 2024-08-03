@@ -18,4 +18,8 @@ export class UsersService {
     const user = this.usersRepository.create({ username, pictures: [], favorites: [] });
     return this.usersRepository.save(user);
   }
+
+  async findUserById(id: number): Promise<User> {
+    return this.usersRepository.findOne({ where: { id } });
+  }
 }
