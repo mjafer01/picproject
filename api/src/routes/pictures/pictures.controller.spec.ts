@@ -8,6 +8,7 @@ import { AuthGuard } from '../../auth/auth.guard';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { User } from '../../database/entities/user.entity';
 import { Picture } from '../../database/entities/picture.entity';
+import { Favorite } from '../../database/entities/favorite.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,6 +17,7 @@ describe('PicturesController (e2e)', () => {
   let picturesService: PicturesService;
   let usersService: UsersService;
   let picturesRepository: Repository<Picture>;
+  let favoriteRepository: Repository<Favorite>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -25,6 +27,10 @@ describe('PicturesController (e2e)', () => {
         AuthGuard,
         {
           provide: getRepositoryToken(Picture),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(Favorite),
           useClass: Repository,
         },
         {
@@ -53,6 +59,7 @@ describe('PicturesController (e2e)', () => {
     picturesService = moduleFixture.get<PicturesService>(PicturesService);
     usersService = moduleFixture.get<UsersService>(UsersService);
     picturesRepository = moduleFixture.get<Repository<Picture>>(getRepositoryToken(Picture));
+    favoriteRepository = moduleFixture.get<Repository<Favorite>>(getRepositoryToken(Favorite));
   });
 
   describe('/pictures (POST)', () => {
@@ -276,7 +283,7 @@ describe('PicturesController (e2e)', () => {
         });
     });
 
-    it('should return 400 and indicate no more pages when pageNumber outof bound', async () => {
+    it('should return 400 and indicate no more pages when pageNumber is out of range', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
       const pictures: Picture[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
@@ -291,10 +298,43 @@ describe('PicturesController (e2e)', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .expect((res) => {
           expect(res.body).toEqual({
-            "currentPage": "3",
-            "message": "Page number out of range",
-            "totalPages": 1,
+            currentPage: 3,
+            message: 'Page number out of range',
+            totalPages: 1,
+          });
         });
+    });
+
+    it('should return 200 and pictures with isFavorite when userId is provided', async () => {
+      const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
+      const pictures: any[] = [
+        { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
+        { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
+      ];
+
+      jest.spyOn(picturesService, 'getPictures').mockResolvedValueOnce({
+        pictures: [
+          { ...pictures[0], isFavorite: true },
+          { ...pictures[1], isFavorite: false },
+        ],
+        totalItems: 2,
+      });
+
+      return request(app.getHttpServer())
+        .get('/pictures')
+        .set('Authorization', '1')
+        .query({ page: 1, limit: 10 })
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({
+            pictures: [
+              { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: pictures[0].createdAt.toISOString(), isFavorite: true },
+              { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: pictures[1].createdAt.toISOString(), isFavorite: false },
+            ],
+            currentPage: 1,
+            totalPages: 1,
+            hasNextPage: false,
+          });
         });
     });
   });

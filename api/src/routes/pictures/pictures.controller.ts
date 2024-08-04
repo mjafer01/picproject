@@ -9,7 +9,9 @@ import { AuthGuard } from '../../auth/auth.guard';
 @ApiTags('Pictures')
 @Controller('pictures')
 export class PicturesController {
-  constructor(private readonly picturesService: PicturesService) {}
+  constructor(
+    private readonly picturesService: PicturesService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -35,35 +37,50 @@ export class PicturesController {
     description: 'Limit of the fetch items',
     required: false,
   })
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'User ID token',
+    required: false,
+  })
   async getPictures(
     @Res() res: Response,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
+    @Headers('Authorization') userId?: number,
   ): Promise<Response> {
     const pageNumber = page || 1;
     const limitNumber = limit || 10;
 
     try {
-      const { pictures, totalItems } = await this.picturesService.getPictures(pageNumber, limitNumber);
+      const { pictures, totalItems } = await this.picturesService.getPictures(pageNumber, limitNumber,userId);
       const totalPages = Math.ceil(totalItems / limitNumber);
 
       if (pageNumber > totalPages) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           message: 'Page number out of range',
-          currentPage: pageNumber,
+          currentPage: parseInt(String(pageNumber)),
           totalPages,
         });
       }
 
       const hasNextPage = pageNumber < totalPages;
 
+
       const response = {
-        pictures: pictures.map((picture:any) => ({
-          id: picture.id,
-          url: picture.url,
-          title: picture.title,
-          createdAt: picture.createdAt,
-        })),
+        pictures: await Promise.all(
+          pictures.map(async (picture: any) => (userId?{
+            id: picture.id,
+            url: picture.url,
+            title: picture.title,
+            createdAt: picture.createdAt,
+            isFavorite: picture.isFavorite
+          }:{
+            id: picture.id,
+            url: picture.url,
+            title: picture.title,
+            createdAt: picture.createdAt,
+          })),
+        ),
         currentPage: parseInt(String(pageNumber)),
         totalPages,
         hasNextPage,

@@ -27,9 +27,9 @@ describe('UsersService', () => {
 
   describe('findUser', () => {
     it('should return a user if the username exists', async () => {
-      let pictures:Picture[] =[]
-      let favorites:Favorite[] =[]
-      const existingUser = { id: 1, username: 'existinguser', pictures, favorites};
+      const pictures: Picture[] = [];
+      const favorites: Favorite[] = [];
+      const existingUser = { id: 1, username: 'existinguser', pictures, favorites } as User;
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(existingUser);
 
       const user = await service.findUser('existinguser');
@@ -48,9 +48,9 @@ describe('UsersService', () => {
 
   describe('createUser', () => {
     it('should create and return a new user', async () => {
-      let pictures:Picture[] =[]
-      let favorites:Favorite[] =[]
-      const newUser = { id: 1, username: 'newuser', pictures, favorites };
+      const pictures: Picture[] = [];
+      const favorites: Favorite[] = [];
+      const newUser = { id: 1, username: 'newuser', pictures, favorites } as User;
       jest.spyOn(repository, 'create').mockImplementationOnce((user: User) => user);
       jest.spyOn(repository, 'save').mockImplementationOnce(async (user: User) => {
         user.id = 1;
@@ -60,6 +60,27 @@ describe('UsersService', () => {
       const user = await service.createUser('newuser');
 
       expect(user).toEqual(newUser);
+    });
+  });
+
+  describe('findUserById', () => {
+    it('should return a user if the id exists', async () => {
+      const pictures: Picture[] = [];
+      const favorites: Favorite[] = [];
+      const existingUser = { id: 1, username: 'existinguser', pictures, favorites } as User;
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(existingUser);
+
+      const user = await service.findUserById(1);
+
+      expect(user).toEqual(existingUser);
+    });
+
+    it('should return undefined if the id does not exist', async () => {
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(undefined);
+
+      const user = await service.findUserById(2);
+
+      expect(user).toBeUndefined();
     });
   });
 });

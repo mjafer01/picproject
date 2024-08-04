@@ -5,13 +5,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Picture } from '../../database/entities/picture.entity';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UsersService } from '../users/users.service';
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { User } from '../../database/entities/user.entity';
 import { Favorite } from '../../database/entities/favorite.entity';
 
 describe('PicturesService', () => {
   let service: PicturesService;
   let picturesRepository: Repository<Picture>;
+  let favoriteRepository: Repository<Favorite>;
   let usersService: UsersService;
 
   beforeEach(async () => {
@@ -20,6 +21,10 @@ describe('PicturesService', () => {
         PicturesService,
         {
           provide: getRepositoryToken(Picture),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(Favorite),
           useClass: Repository,
         },
         {
@@ -33,6 +38,7 @@ describe('PicturesService', () => {
 
     service = module.get<PicturesService>(PicturesService);
     picturesRepository = module.get<Repository<Picture>>(getRepositoryToken(Picture));
+    favoriteRepository = module.get<Repository<Favorite>>(getRepositoryToken(Favorite));
     usersService = module.get<UsersService>(UsersService);
   });
 
@@ -100,7 +106,53 @@ describe('PicturesService', () => {
   });
 
   describe('getPictures', () => {
-    it('should return pictures with pagination', async () => {
+    it('should return pictures with pagination and favorite status', async () => {
+      const page = 1;
+      const limit = 10;
+      const totalItems = 15;
+      const userId = 1;
+      const user: User = {
+        id: userId,
+        username: 'testuser',
+        pictures: [] as Picture[],
+        favorites: [] as Favorite[],
+      };
+      const pictures: Picture[] = [
+        {
+          id: 1,
+          createdAt: new Date(),
+          url: 'http://example.com/picture1.jpg',
+          title: 'Picture 1',
+          user,
+        },
+        {
+          id: 2,
+          createdAt: new Date(),
+          url: 'http://example.com/picture2.jpg',
+          title: 'Picture 2',
+          user,
+        },
+      ];
+      const favorites: Favorite[] = [
+        { id: 1, user, picture: pictures[0] },
+      ];
+
+      jest.spyOn(picturesRepository, 'findAndCount').mockResolvedValueOnce([pictures, totalItems]);
+      jest.spyOn(favoriteRepository, 'findOne').mockImplementation(async (options) => {
+        const { where } = options as any;
+        return favorites.find(fav => fav.picture.id === where.picture.id && fav.user.id === where.user.id) || null;
+      });
+
+      const result = await service.getPictures(page, limit, userId);
+
+      expect(result.pictures).toEqual([
+        { ...pictures[0], isFavorite: true },
+        { ...pictures[1], isFavorite: false },
+      ]);
+      expect(result.totalItems).toEqual(totalItems);
+    });
+
+    it('should return pictures without favorite status if userId is not provided', async () => {
       const page = 1;
       const limit = 10;
       const totalItems = 15;
@@ -144,5 +196,54 @@ describe('PicturesService', () => {
 
       await expect(service.getPictures(page, limit)).rejects.toThrow(new InternalServerErrorException('Error fetching pictures'));
     });
+  });
+
+  describe('isFavorite', () => {
+    it('should return true if the picture is marked as favorite', async () => {
+      const userId = 1;
+      const pictureId = 1;
+      const favorite: Favorite = {
+        id: 1,
+        user: { id: userId } as User,
+        picture: { id: pictureId } as Picture,
+      };
+
+      jest.spyOn(favoriteRepository, 'findOne').mockResolvedValue(favorite);
+
+      const result = await service['isFavorite'](userId, pictureId);
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false if the picture is not marked as favorite', async () => {
+      const userId = 1;
+      const pictureId = 1;
+
+      jest.spyOn(favoriteRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await service['isFavorite'](userId, pictureId);
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('findById', () => {
+    it('should return a picture by id', async () => {
+      const pictureId = 1;
+      const picture: Picture = {
+        id: pictureId,
+        createdAt: new Date(),
+        url: 'http://example.com/picture1.jpg',
+        title: 'Picture 1',
+        user: {} as User,
+      };
+
+      jest.spyOn(picturesRepository, 'findOne').mockResolvedValue(picture);
+
+      const result = await service.findById(pictureId);
+
+      expect(result).toEqual(picture);
+    });
+
   });
 });
