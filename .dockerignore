@@ -1,0 +1,11 @@
+node_modules
+build
+.env
+.parcel-cache
+.idea
+.yarn
+dist
+.yarnrc.yml
+babel.config.js
+eslint.config.js
+.eslint.config.js

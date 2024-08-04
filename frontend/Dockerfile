@@ -13,5 +13,3 @@ COPY . ./
 
 # Run ESLint
 #RUN yarn run lint
-
-CMD ["yarn", "start"]

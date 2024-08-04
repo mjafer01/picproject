@@ -1,15 +1,15 @@
-import HomePage from '../pages/HomePage';
-import React from 'react';
-
 const RoutePathUtil = (
   browserRouter: any,
   routes: { path: string; element: any }[],
+  initialEntries?: string,
 ) => {
-  return browserRouter([
-    {
-      path: '/',
-      element: <HomePage />,
-    },
-  ]);
+  let extraArg = {};
+  if (initialEntries) {
+    extraArg = {
+      initialEntries: ['/', initialEntries],
+      initialIndex: 1,
+    };
+  }
+  return browserRouter(routes, extraArg);
 };
 export default RoutePathUtil;

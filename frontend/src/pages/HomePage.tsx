@@ -1,8 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
+import { AppTitle } from '../components';
+import Template from '../templates/Template';
 
 const HomePage: React.FC = () => {
-  return <></>;
+  return (
+    <Template
+      TitleComponent={AppTitle}
+      title={'PicShare'}
+      loginPageLink={'/login'}
+    >
+      helloe
+    </Template>
+  );
 };
 
 export default HomePage;

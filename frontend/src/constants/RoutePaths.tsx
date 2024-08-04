@@ -1,5 +1,4 @@
 import HomePage from '../pages/HomePage';
-import React from 'react';
 
 const RoutePaths = [
   {

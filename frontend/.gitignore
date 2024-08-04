@@ -21,3 +21,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+*storybook.log
+
+**/*.test.tsx
+**/*.test.ts
+**/*.test.js
+.DS_Store
+.git
+.gitignore
+yarn.lock
+npm-debug.log

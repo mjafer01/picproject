@@ -14,7 +14,7 @@ const compat = new FlatCompat();
 export default [
   ...compat.extends('airbnb-typescript'),
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.html', '**/*.vue'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     plugins: {
       '@typescript-eslint': typescriptEslint,
       'react': react,
