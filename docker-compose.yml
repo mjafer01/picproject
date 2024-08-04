@@ -7,7 +7,7 @@ services:
       - ./api:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - "3005:3005"
     environment:
       - NODE_ENV=development
     command: yarn start:dev
@@ -17,25 +17,27 @@ services:
       context: frontend
     ports:
       - "3001:3001"
-      - "6000:6000"
+      - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
     command: yarn start
-
-  storybook:
-    build:
-      context: frontend
-    ports:
-      - "6006:6006"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - CI=true
-    command: yarn storybook
     depends_on:
-      - app
+      - api
+
+  #storybook:
+  ##  build:
+   #   context: frontend
+   # ports:
+   #   - "6006:6006"
+   # volumes:
+   #   - ./frontend:/app
+   #   - /app/node_modules
+   # environment:
+   ##   - NODE_ENV=development
+    #  - CI=true
+    #command: yarn storybook
+    #depends_on:
+    #  - app

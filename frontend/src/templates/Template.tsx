@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import TemplateProps from './TemplateProps.d';
 import MenuBar from './menubar/MenuBar';
 import GlobalStyles from '../styles/GlobalStyles';
+import { TemplateSpace } from '../styles/AfterMenuSpace';
 
 const Template: React.FC<TemplateProps> = ({
   TitleComponent,
@@ -17,6 +18,7 @@ const Template: React.FC<TemplateProps> = ({
         title={title}
         loginPageLink={loginPageLink}
       />
+      <TemplateSpace height={4} maxHeight={30} />
       {children}
     </>
   );

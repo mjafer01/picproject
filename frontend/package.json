@@ -38,7 +38,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "rm -rf ./.parcel-cache && yarn parcel serve public/index.html --port 6000 --dist-dir ./dist & browser-sync start --host 192.168.1.2 --proxy \"localhost:6000\" --files \"dist/**/*.*\" --port 6001",
+    "start": "rm -rf ./.parcel-cache && yarn parcel serve public/index.html --port 1234  --dist-dir ./dist & browser-sync start --host 192.168.1.2 --proxy \"localhost:1234\" --files \"dist/**/*.*\"",
     "start:react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

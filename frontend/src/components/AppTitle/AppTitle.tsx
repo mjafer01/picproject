@@ -1,12 +1,12 @@
 import React from 'react';
 import AppTitleProps from './AppTitleProps.d';
 import TitleBar from '../../styles/TitleBar';
-import TitleText from '../../styles/TitleText';
+import Logo from './Logo';
 
-const AppTitle: React.FC<AppTitleProps> = ({ title }) => {
+const AppTitle: React.FC<AppTitleProps> = ({ title, height, width }) => {
   return (
-    <TitleBar>
-      <TitleText>{title}</TitleText>
+    <TitleBar height={height ?? 35} width={width ?? 134}>
+      <Logo />
     </TitleBar>
   );
 };

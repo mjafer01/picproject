@@ -970,7 +970,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^10.0.0":
+"@nestjs/platform-express@npm:^10.3.10":
   version: 10.3.10
   resolution: "@nestjs/platform-express@npm:10.3.10"
   dependencies:
@@ -2310,7 +2310,7 @@ __metadata:
     "@nestjs/cli": "npm:^10.0.0"
     "@nestjs/common": "npm:^10.3.10"
     "@nestjs/core": "npm:^10.0.0"
-    "@nestjs/platform-express": "npm:^10.0.0"
+    "@nestjs/platform-express": "npm:^10.3.10"
     "@nestjs/schematics": "npm:^10.0.0"
     "@nestjs/swagger": "npm:^7.4.0"
     "@nestjs/testing": "npm:^10.0.0"

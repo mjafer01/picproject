@@ -5,7 +5,6 @@ build
 .idea
 .yarn
 dist
-.yarnrc.yml
 babel.config.js
 eslint.config.js
 .eslint.config.js

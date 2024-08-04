@@ -1,9 +1,23 @@
-import HomePage from '../pages/HomePage';
+import { DefaultRouteWithTemplate } from '../components';
+
+import { LoginPage, HomePage } from '../pages';
 
 const RoutePaths = [
   {
     path: '/',
-    element: <HomePage />,
+    element: (
+      <DefaultRouteWithTemplate type={'Public'}>
+        <HomePage />
+      </DefaultRouteWithTemplate>
+    ),
+  },
+  {
+    path: '/login',
+    element: (
+      <DefaultRouteWithTemplate type={'Protected'}>
+        <LoginPage />
+      </DefaultRouteWithTemplate>
+    ),
   },
 ];
 
