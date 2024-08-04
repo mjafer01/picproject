@@ -7,7 +7,18 @@ services:
       - ./api:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - "1234:3000"
     environment:
       - NODE_ENV=development
     command: yarn start:dev
+  app:
+    build:
+      context: frontend
+    ports:
+      - "3001:3001"
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development

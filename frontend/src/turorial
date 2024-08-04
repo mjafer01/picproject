@@ -1,0 +1,162 @@
+import styled from 'styled-components';
+
+const Page = styled.div`
+  flex-flow: row nowrap;
+  height: 100vh;
+  display: flex;
+  width: 100vw;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+    padding-top:20px
+`;
+
+display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding-top: 50px;
+
+
+
+  justify-content: center;
+  align-items: center;
+
+const rotateDown = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+`;
+
+const rotateUp = keyframes`
+  from {
+    transform: rotate(90deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+`;
+interface LinkDivProps {
+  marginLeft: number;
+}
+
+const ALink = styled.a`
+  text-decoration: none;
+  cursor: pointer;
+  color: blue;
+  color: blue;
+  &:hover {
+    cursor: pointer;
+  };
+  &:active{
+    color:inherit;
+    color: blue;
+  };
+`;
+const LinkDiv = styled.div<LinkDivProps>`
+  margin-bottom: 10px;
+  margin-left: ${({ marginLeft }) => `${marginLeft}px`};
+`;
+const RotatingArrowIcon = styled(ArrowForwardIosIcon)<{ doRotate: boolean }>`
+  animation: ${({ doRotate }) => (doRotate ? rotateDown : rotateUp)} 0.3s forwards;
+`;
+ info: { index: number; icon: ElementType; player: number };
+
+ const LinkDiv = styled.div<LinkDivProps>`
+   margin-bottom: 10px;
+   ${({ marginLeft }) => marginLeft !== undefined && `margin-left: ${marginLeft}px;`}
+ `;
+
+
+ display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid;
+  border-bottom: 1px solid;
+
+
+
+    &::after {
+      content: 'Months';
+      position: absolute;
+      bottom: -40px;
+    }
+
+
+const scaleUp = keyframes`
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+`;
+
+//Y
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  //B
+
+  width: 10%;
+  height: ${({ height }) => height}%;
+  background-color: #3498db;
+  margin: 0 5px;
+  animation: ${scaleUp} 1s ease-in-out;
+  transform-origin: bottom;
+
+
+
+ &:hover::after {
+    content: attr(data-value);
+    position: absolute;
+    margin-top: -40px;
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    font-size: 12px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8%;
+  }
+
+
+&:hover::after {
+    content: attr(data-value);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    white-space: pre; /* Allows handling of white space and line breaks */
+    font-size: 12px;
+    text-align: center;
+  }
+
+
+  const searchBox = document.getElementById('searchBox');
+
+  function searchQuery(query) {
+    console.log('Searching for:', query);
+  }
+
+  const debouncedSearch = debounce((event) => {
+    searchQuery(event.target.value);
+  }, 300);
+
+  searchBox.addEventListener('input', debouncedSearch);
