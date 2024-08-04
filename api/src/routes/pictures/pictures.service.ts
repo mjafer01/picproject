@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Picture } from '../../database/entities/picture.entity';
@@ -12,6 +12,19 @@ export class PicturesService {
     private picturesRepository: Repository<Picture>,
     private usersService: UsersService,
   ) {}
+
+  async findById(pictureId: number): Promise<Picture> {
+    return this.picturesRepository.findOne({ where: { id:pictureId } });
+  }
+  async findByIdUserId(pictureId: number,userId:number): Promise<Picture> {
+    const user = await this.usersService.findUserById(userId);
+    const picture = await this.findById(pictureId);
+
+    if (!user || !picture) {
+      throw new NotFoundException('User or Picture not found');
+    }
+    return picture;
+  }
 
   async getPictures(page: number, limit: number): Promise<{ pictures: Picture[], totalItems: number }> {
     const offset = (page - 1) * limit;

@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HealthController } from './apis/health/health.controller';
+import { HealthController } from './routes/health/health.controller';
 import { User } from './database/entities/user.entity';
 import { Picture } from './database/entities/picture.entity';
 import { Favorite } from './database/entities/favorite.entity';
-import { UsersModule } from './apis/users/users.module';
-import { PicturesModule } from './apis/pictures/pictures.module';
+import { UsersModule } from './routes/users/users.module';
+import { PicturesModule } from './routes/pictures/pictures.module';
+import { FavoritesModule } from './routes/favourites/favorites.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { PicturesModule } from './apis/pictures/pictures.module';
       synchronize: true,
     }),
     UsersModule,
-    PicturesModule
+    PicturesModule,
+    FavoritesModule
   ],
   controllers: [HealthController],
   providers: [],
