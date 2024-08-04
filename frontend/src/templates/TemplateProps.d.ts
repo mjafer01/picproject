@@ -1,5 +1,5 @@
-import MenuBarProps from './menubar/MenuBarProps.d';
-type TemplateProps = MenuBarProps & {
+type TemplateProps = {
+  isLoggedIn: boolean;
   children: any;
 };
 

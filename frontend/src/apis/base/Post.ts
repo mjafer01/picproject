@@ -11,9 +11,9 @@ export const post = async (
   token?: string,
 ): Promise<AxiosResponse<ApiResponse>> => {
   try {
-    const authAuthorization = token ? { Authorization: token } : {};
+    const headers = token ? { Authorization: token } : {};
     const response: AxiosResponse<ApiResponse> = await axios.post(url, data, {
-      headers: { ...authAuthorization },
+      headers,
     });
     return response;
   } catch (error) {

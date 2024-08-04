@@ -5,16 +5,11 @@ import {
   ButtonDiv,
   MobileMenuDiv,
 } from '../../styles/BarContainer';
-import MenuBarProps from './MenuBarProps.d';
-import { PrimaryButton } from '../../components';
-import { Button, Drawer } from 'antd';
+import { AppTitle, PrimaryButton } from '../index';
 import { MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-const MenuBar: React.FC<MenuBarProps> = ({
-  TitleComponent,
-  title,
-  loginPageLink,
-}) => {
+import { Drawer } from 'antd';
+const PublicMenuBar: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 500);
 
@@ -28,7 +23,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
   };
 
   const handleClick = () => {
-    navigate(loginPageLink);
+    navigate('/login');
   };
 
   useEffect(() => {
@@ -71,7 +66,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
           </Drawer>
         </MobileMenuDiv>
       )}
-      <TitleComponent title={title} />
+      <AppTitle />
       {!isMobile && (
         <ButtonDiv>
           <PrimaryButton
@@ -88,4 +83,4 @@ const MenuBar: React.FC<MenuBarProps> = ({
     </BarContainer>
   );
 };
-export default MenuBar;
+export default PublicMenuBar;

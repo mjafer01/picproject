@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { ButtonProps as AntButtonProps } from 'antd/es/button/button';
 
 const BarContainer = styled.div`
   width: 100%;
@@ -25,5 +26,50 @@ const ButtonDiv = styled.div`
   width: 100%;
   justify-content: end;
 `;
+const RightMenuDiv = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-left: 45px;
+`;
+const LeftMenuBox = styled.div`
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 64px;
+  display: flex;
+  font-size: 14px;
+  color: #000000;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+`;
+interface RightElementDivProps {
+  paddingLeft: number;
+}
+const RightElementDiv = styled.div<RightElementDivProps>`
+  ${({ paddingLeft }) =>
+    paddingLeft !== undefined && `padding-left: ${paddingLeft}px;`}
+  font-size: 12px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+`;
 
-export { BarContainer, BarSpace, ButtonDiv, MobileMenuDiv };
+const CustomModalTitle = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  height: 56px;
+  width: 572px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+export {
+  BarContainer,
+  BarSpace,
+  ButtonDiv,
+  MobileMenuDiv,
+  LeftMenuBox,
+  RightMenuDiv,
+  RightElementDiv,
+  CustomModalTitle,
+};

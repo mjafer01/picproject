@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
   return (
     <ParentContent>
       <MainContent>
-        <AppTitle title={'PicShare'} />
+        <AppTitle />
         <Text fontSize={15} color={'#00000073'}>
           Login to start sharing
         </Text>

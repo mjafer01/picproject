@@ -9,10 +9,15 @@ const MainContent = styled.div`
   justify-content: center;
   flex-direction: column;
 `;
+const LazyContent = styled.div`
+  display: flex;
+  width: 74vw;
+  height: 100%;
+`;
 const ParentContent = styled.div`
   display: flex;
   width: 100vw;
   justify-content: center;
 `;
 
-export { ParentContent, MainContent };
+export { ParentContent, MainContent, LazyContent };

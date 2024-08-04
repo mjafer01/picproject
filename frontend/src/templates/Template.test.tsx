@@ -9,7 +9,7 @@ describe('Template', () => {
   const title = 'Test Title';
   const loginPageLink = '/login';
 
-  it('should render UseNavigateFunc, GlobalStyles, MenuBar, and children', async () => {
+  it('should render UseNavigateFunc, GlobalStyles, PublicMenuBar, and children', async () => {
     render(
       <MemoryRouter>
         <Template
@@ -26,7 +26,7 @@ describe('Template', () => {
     expect(document.querySelector('div')).toBeInTheDocument();
   });
 
-  it('should pass props correctly to MenuBar', () => {
+  it('should pass props correctly to PublicMenuBar', () => {
     render(
       <MemoryRouter>
         <Template

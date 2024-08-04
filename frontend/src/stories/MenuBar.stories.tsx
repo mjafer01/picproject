@@ -1,17 +1,17 @@
 import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
-import MenuBar from '../templates/menubar/MenuBar';
+import PublicMenuBar from '../components/PublicMenuBar/./PublicMenuBar';
 import { MemoryRouter } from 'react-router-dom';
-import MenuBarProps from '../templates/menubar/MenuBarProps.d';
+import MenuBarProps from '../components/PublicMenuBar/MenuBarProps.d';
 
 export default {
-  title: 'Template/MenuBar',
-  component: MenuBar,
+  title: 'Template/PublicMenuBar',
+  component: PublicMenuBar,
 } as Meta;
 
 const Template: StoryFn<MenuBarProps> = (args) => (
   <MemoryRouter>
-    <MenuBar {...args} />
+    <PublicMenuBar {...args} />
   </MemoryRouter>
 );
 
