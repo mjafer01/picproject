@@ -5273,6 +5273,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/axios@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@types/axios@npm:0.14.0"
+  dependencies:
+    axios: "npm:*"
+  checksum: 10c0/f315a485b8069038a1bd8d7c064b84dc6f726dfaab4ef1a6602b0bd38bbf32a6903dc9282293caafefac38da5a0e938fa6623ce8dd173adb41864dac6cb83716
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7, @types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.14, @types/babel__core@npm:^7.18.0":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -7067,7 +7076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.3":
+"axios@npm:*, axios@npm:^1.7.3":
   version: 1.7.3
   resolution: "axios@npm:1.7.3"
   dependencies:
@@ -13041,6 +13050,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-mock-axios@npm:^4.7.3":
+  version: 4.7.3
+  resolution: "jest-mock-axios@npm:4.7.3"
+  dependencies:
+    "@jest/globals": "npm:^29.7.0"
+    jest: "npm:~29.7.0"
+    synchronous-promise: "npm:^2.0.17"
+  checksum: 10c0/3307646191b7ec0b95221b3f81dddc9c722bd3a0428b7f44ccbbc85c8816e4c224f8541bb8fe193ccb353e10bb5863ed1858c1e454b335d302bd13b28f2e0279
+  languageName: node
+  linkType: hard
+
 "jest-mock@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-mock@npm:27.5.1"
@@ -13545,7 +13565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.7.0":
+"jest@npm:^29.7.0, jest@npm:~29.7.0":
   version: 29.7.0
   resolution: "jest@npm:29.7.0"
   dependencies:
@@ -19590,6 +19610,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"synchronous-promise@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "synchronous-promise@npm:2.0.17"
+  checksum: 10c0/1babe643d8417789ef6e5a2f3d4b8abcda2de236acd09bbe2c98f6be82c0a2c92ed21a6e4f934845fa8de18b1435a9cba1e8c3d945032e8a532f076224c024b1
+  languageName: node
+  linkType: hard
+
 "synckit@npm:^0.9.1":
   version: 0.9.1
   resolution: "synckit@npm:0.9.1"
@@ -19796,6 +19823,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^5.17.0"
     "@testing-library/react": "npm:^13.4.0"
     "@testing-library/user-event": "npm:^13.5.0"
+    "@types/axios": "npm:^0.14.0"
     "@types/babel__core": "npm:^7"
     "@types/babel__preset-env": "npm:^7"
     "@types/eslint": "npm:^8"
@@ -19830,6 +19858,7 @@ __metadata:
     identity-obj-proxy: "npm:^3.0.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
+    jest-mock-axios: "npm:^4.7.3"
     jest-styled-components: "npm:^7.2.0"
     jsdom: "npm:^24.1.1"
     mailgun-js: "npm:^0.22.0"

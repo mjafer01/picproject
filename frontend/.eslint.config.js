@@ -37,7 +37,6 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
       '@typescript-eslint/explicit-function-return-type': 'off',
-      'import/no-extraneous-dependencies': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
       'import/extensions': [
         'error',
@@ -46,6 +45,14 @@ export default [
           js: 'never',
           ts: 'never',
           tsx: 'never',
+        },
+      ],
+      'import/no-extraneous-dependencies': [
+        'error',
+        {
+          devDependencies: true,
+          optionalDependencies: false,
+          peerDependencies: false,
         },
       ],
     },

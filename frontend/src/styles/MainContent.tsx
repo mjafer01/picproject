@@ -21,5 +21,23 @@ const ParentContent = styled.div`
   width: 100vw;
   justify-content: center;
 `;
+const LoginContentBar = styled.p`
+  display: flex;
+  width: 76.5vw;
+  height: 42px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-family: Roboto, Serif;
+  flex-direction: row;
+`;
+const LinkSpan = styled.span`
+  cursor: pointer;
+  color: #1890ff;
+  display: inline;
+`;
 
-export { ParentContent, MainContent, LazyContent };
+export { ParentContent, MainContent, LazyContent, LoginContentBar, LinkSpan };

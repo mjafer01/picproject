@@ -19,6 +19,7 @@ import {
   ActionButtonBox,
 } from '../../styles/SharePicModal';
 import SharePictureApi from '../../apis/pictures/SharePictureApi';
+import { toast } from 'react-toastify';
 
 const PrivateMenuBar: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -41,9 +42,17 @@ const PrivateMenuBar: React.FC = () => {
   };
 
   const handleModalOk = async () => {
+    toast.loading('Processing request please wait..');
+    if (!pictureUrl && !title) {
+      toast.dismiss();
+      toast.error('Url and Title of a picture are required');
+      return;
+    }
     await SharePictureApi(pictureUrl, title);
     navigate('/');
-    window.location.reload();
+    toast.dismiss();
+    toast.success('Picture shared');
+    setTimeout(() => window.location.reload(), 1000);
   };
 
   const handleModalCancel = () => {

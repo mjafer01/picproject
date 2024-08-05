@@ -1,5 +1,5 @@
 import React from 'react';
-import { LazyContent, ParentContent } from '../../styles/MainContent';
+import { LazyContent } from '../../styles/MainContent';
 import { PicCard } from '../../components';
 import { toast } from 'react-toastify';
 
@@ -110,11 +110,9 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
   };
 
   return (
-    <ParentContent>
-      <LazyContent>
-        <RenderPictures />
-      </LazyContent>
-    </ParentContent>
+    <LazyContent>
+      <RenderPictures />
+    </LazyContent>
   );
 };
 

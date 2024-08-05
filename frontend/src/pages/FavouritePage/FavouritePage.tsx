@@ -3,6 +3,7 @@ import GetAllFavoritePictures from '../../apis/favorites/GetAllFavoritePicturesA
 import ToggleFavoriteApi from '../../apis/favorites/ToggleFavoriteApis';
 
 import PictureDisplayPanel from '../../components/PictureDisplayPanel/PictureDisplayPanel';
+import { ParentContent } from '../../styles/MainContent';
 
 const FavouritePage: React.FC = () => {
   const ToggleFavoriteForwardApi = async (
@@ -19,10 +20,12 @@ const FavouritePage: React.FC = () => {
     return pictures;
   };
   return (
-    <PictureDisplayPanel
-      GetAllPicturesApi={GetAllFavoritePictures}
-      ToggleFavoriteApi={ToggleFavoriteForwardApi}
-    />
+    <ParentContent>
+      <PictureDisplayPanel
+        GetAllPicturesApi={GetAllFavoritePictures}
+        ToggleFavoriteApi={ToggleFavoriteForwardApi}
+      />
+    </ParentContent>
   );
 };
 
