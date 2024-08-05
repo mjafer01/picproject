@@ -27,17 +27,17 @@ services:
     depends_on:
       - api
 
-  #storybook:
-  ##  build:
-   #   context: frontend
-   # ports:
-   #   - "6006:6006"
-   # volumes:
-   #   - ./frontend:/app
-   #   - /app/node_modules
-   # environment:
-   ##   - NODE_ENV=development
-    #  - CI=true
-    #command: yarn storybook
-    #depends_on:
-    #  - app
+  storybook:
+    build:
+      context: frontend
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CI=true
+    command: yarn storybook
+    depends_on:
+      - app
