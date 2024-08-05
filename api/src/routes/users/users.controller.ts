@@ -3,6 +3,7 @@ import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { LoginUserDto } from './dto/login-user.dto';
+import { User } from '../../database/entities/user.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -17,11 +18,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Existing user logged in successfully.',
-    schema: {
-      example: {
-        token: 1,
-      },
-    },
+    type: [User],
   })
   @ApiResponse({
     status: 201,
@@ -50,10 +47,10 @@ export class UsersController {
 
       if (!user) {
         user = await this.usersService.createUser(username);
-        return res.status(HttpStatus.CREATED).json({ token: user.id });
+        return res.status(HttpStatus.CREATED).json(user);
       }
 
-      return res.status(HttpStatus.OK).json({ token: user.id });
+      return res.status(HttpStatus.OK).json(user);
     } catch (error) {
       console.error('Error logging in user:', error);
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });

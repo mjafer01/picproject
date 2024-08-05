@@ -10,6 +10,6 @@ export class Favorite {
   @ManyToOne(() => User, user => user.favorites)
   user: User;
 
-  @ManyToOne(() => Picture)
+  @ManyToOne(() => Picture, picture => picture.favorites)
   picture: Picture;
 }

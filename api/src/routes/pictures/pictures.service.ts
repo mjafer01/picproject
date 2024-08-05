@@ -34,6 +34,7 @@ export class PicturesService {
       },
       skip: offset,
       take: limit,
+      relations: ['user'],
     });
 
     if (userId) {
@@ -50,12 +51,19 @@ export class PicturesService {
   async createPicture(createPictureDto: CreatePictureDto, userId: number): Promise<Picture> {
     try {
       const user = await this.usersService.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
       const picture = this.picturesRepository.create({
         ...createPictureDto,
         user,
+        createdAt: new Date(),  // Set the createdAt field to the current date and time
       });
+
       return await this.picturesRepository.save(picture);
     } catch (error) {
+      console.error('Error creating picture:', error);
       throw new InternalServerErrorException('Error creating picture');
     }
   }

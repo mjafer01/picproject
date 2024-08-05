@@ -2,9 +2,9 @@ import { Controller, Post, Body, Res, UseGuards, HttpStatus, Headers, Get, Query
 import { ApiTags, ApiResponse, ApiOperation, ApiHeader, ApiQuery } from '@nestjs/swagger';
 import { PicturesService } from './pictures.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
-import { GetPictureDto } from './dto/get-picture.dto';
 import { Response } from 'express';
 import { AuthGuard } from '../../auth/auth.guard';
+import { GetResponsePictureDto } from './dto/get-response-picture.dto';
 
 @ApiTags('Pictures')
 @Controller('pictures')
@@ -21,7 +21,7 @@ export class PicturesController {
   @ApiResponse({
     status: 200,
     description: 'Successfully fetched pictures.',
-    type: [GetPictureDto],
+    type: [GetResponsePictureDto],
   })
   @ApiResponse({
     status: 400,
@@ -67,20 +67,7 @@ export class PicturesController {
 
 
       const response = {
-        pictures: await Promise.all(
-          pictures.map(async (picture: any) => (userId?{
-            id: picture.id,
-            url: picture.url,
-            title: picture.title,
-            createdAt: picture.createdAt,
-            isFavorite: picture.isFavorite
-          }:{
-            id: picture.id,
-            url: picture.url,
-            title: picture.title,
-            createdAt: picture.createdAt,
-          })),
-        ),
+        pictures,
         currentPage: parseInt(String(pageNumber)),
         totalPages,
         hasNextPage,

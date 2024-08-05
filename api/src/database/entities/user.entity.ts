@@ -1,18 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Picture } from './picture.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Favorite } from './favorite.entity';
+import { Picture } from './picture.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   username: string;
-
-  @OneToMany(() => Picture, picture => picture.user)
-  pictures: Picture[];
 
   @OneToMany(() => Favorite, favorite => favorite.user)
   favorites: Favorite[];
+
+  @OneToMany(() => Picture, picture => picture.user)
+  pictures: Picture[];
 }

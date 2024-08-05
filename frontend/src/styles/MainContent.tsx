@@ -11,8 +11,10 @@ const MainContent = styled.div`
 `;
 const LazyContent = styled.div`
   display: flex;
-  width: 74vw;
+  width: 78vw;
   height: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 `;
 const ParentContent = styled.div`
   display: flex;

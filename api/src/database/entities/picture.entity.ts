@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { Favorite } from './favorite.entity';
 
 @Entity()
 export class Picture {
@@ -12,9 +13,12 @@ export class Picture {
   @Column()
   title: string;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column()
   createdAt: Date;
 
   @ManyToOne(() => User, user => user.pictures)
   user: User;
+
+  @OneToMany(() => Favorite, favorite => favorite.picture)
+  favorites: Favorite[];
 }

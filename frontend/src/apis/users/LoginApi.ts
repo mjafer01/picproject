@@ -5,7 +5,8 @@ const LoginApi = async (username: string): Promise<boolean> => {
     username,
   });
   if (response.status === 200 || response.status === 201) {
-    localStorage.setItem('token', (response.data as any).token);
+    localStorage.setItem('token', (response.data as any).id);
+    localStorage.setItem('username', (response.data as any).username);
     return true;
   }
   return false;
