@@ -6,7 +6,7 @@ import {
   LeftMenuBox,
   MobileMenuDiv,
   RightMenuDiv,
-  RightElementDiv,
+  RightElementDiv, LeftMenuActiveBox,
 } from '../../styles/BarContainer';
 import { PrimaryButton } from '../index';
 import AppTitle from '../AppTitle/AppTitle';
@@ -22,8 +22,11 @@ import {
 import SharePictureApi from '../../apis/pictures/SharePictureApi';
 import { toast } from 'react-toastify';
 import { LinkMenu } from '../../styles/ContentStyles';
+type PrivateMenuBarProps = {
+  activemenu?:string
+}
 
-const PrivateMenuBar: React.FC = () => {
+const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 650 ?? false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -76,6 +79,26 @@ const PrivateMenuBar: React.FC = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const LeftMenu = (title:string,link:string) =>{
+
+    if(title === activemenu){
+      return (<LeftMenuActiveBox
+        onClick={() => {
+          navigate(link);
+        }}
+      >
+        {title}
+      </LeftMenuActiveBox>)
+    }
+    return (<LeftMenuBox
+      onClick={() => {
+        navigate(link);
+      }}
+    >
+      {title}
+    </LeftMenuBox>)
+  }
 
   return (
     <BarContainer>
@@ -131,20 +154,8 @@ const PrivateMenuBar: React.FC = () => {
       <AppTitle />
       {!isMobile && (
         <RightMenuDiv>
-          <LeftMenuBox
-            onClick={() => {
-              navigate('/');
-            }}
-          >
-            Home
-          </LeftMenuBox>
-          <LeftMenuBox
-            onClick={() => {
-              navigate('/favorites');
-            }}
-          >
-            Favourite
-          </LeftMenuBox>
+          {LeftMenu ('Home','/')}
+          {LeftMenu ('Favourite','/favorites')}
           <ButtonDiv>
             <PrimaryButton width={78} height={24} onClick={handleClick}>
               Share Pic

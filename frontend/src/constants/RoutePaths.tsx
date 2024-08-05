@@ -6,16 +6,15 @@ const RoutePaths = [
   {
     path: '/',
     element: (
-      <DefaultRouteWithTemplate type={'Public'}>
+      <DefaultRouteWithTemplate type={'Public'} activemenu={'Home'}>
         <HomePage />
-        FavouritePage
       </DefaultRouteWithTemplate>
     ),
   },
   {
     path: '/favorites',
     element: (
-      <DefaultRouteWithTemplate type={'Private'}>
+      <DefaultRouteWithTemplate type={'Private'} activemenu={'Favourite'}>
         <FavouritePage />
       </DefaultRouteWithTemplate>
     ),

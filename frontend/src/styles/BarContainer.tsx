@@ -44,6 +44,19 @@ const LeftMenuBox = styled.div`
   justify-content: center;
   margin: auto;
 `;
+const LeftMenuActiveBox = styled.div`
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 64px;
+  display: flex;
+  font-size: 14px;
+  color: #0964FF;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+    border-bottom: 1px solid #0964FF;
+  margin: auto;
+`;
 interface RightElementDivProps {
   paddingLeft: number;
 }
@@ -72,4 +85,5 @@ export {
   RightMenuDiv,
   RightElementDiv,
   CustomModalTitle,
+  LeftMenuActiveBox
 };

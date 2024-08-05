@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
   children,
   type,
+  activemenu
 }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -18,7 +19,7 @@ const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
       navigate('/');
     }
   });
-  return <Template isLoggedIn={!!token}>{children}</Template>;
+  return <Template isLoggedIn={!!token} activemenu={activemenu}>{children}</Template>;
 };
 
 export default DefaultRouteWithTemplate;
