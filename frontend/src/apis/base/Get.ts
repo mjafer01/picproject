@@ -16,7 +16,7 @@ export const get = async (
     });
     return response;
   } catch (error) {
-    console.error('Error posting data:', error);
+    //console.error('Error posting data:', error);
     throw error;
   }
 };

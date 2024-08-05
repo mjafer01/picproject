@@ -1,16 +1,8 @@
 import React from 'react';
-import { LazyContent } from '../../styles/MainContent';
+import { LazyContent } from '../../styles/ContentStyles';
 import { PicCard } from '../../components';
 import { toast } from 'react-toastify';
-
-type PictureDisplayPanelProps = {
-  GetAllPicturesApi: (page: number, limit: number) => Promise<any>;
-  ToggleFavoriteApi: (
-    index: number,
-    pictureId: number,
-    pictures: any,
-  ) => Promise<any>;
-};
+import PictureDisplayPanelProps from './PictureDisplayPanelProps.d';
 
 const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
   GetAllPicturesApi,
@@ -34,11 +26,14 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
     if (!lastApiResponse.current.hasNextPage) {
       return;
     }
+
+    toast.loading('Loading');
     lastApiResponse.current = await GetAllPicturesApi(
       lastApiResponse.current.currentPage + 1,
       calculateInitialLimit() ?? 12,
     );
     if (lastApiResponse.current.pictures) {
+      toast.dismiss();
       setPictures((prevPictures: any) => {
         const newPictures = lastApiResponse.current.pictures.filter(
           (newPic: any) =>
@@ -50,9 +45,7 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
   };
 
   React.useEffect(() => {
-    toast.promise(getAllPictures, {
-      pending: 'Loading',
-    });
+    getAllPictures().then();
 
     const handleScroll = async () => {
       if (
@@ -109,11 +102,7 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
     return <>{elements}</>;
   };
 
-  return (
-    <LazyContent>
-      <RenderPictures />
-    </LazyContent>
-  );
+  return <LazyContent>{RenderPictures()}</LazyContent>;
 };
 
 export default PictureDisplayPanel;

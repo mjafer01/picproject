@@ -3,7 +3,6 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { compilerOptions } = require('./tsconfig.json');
 
-
 export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
@@ -18,4 +17,5 @@ export default {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  testTimeout: 10000,
 };

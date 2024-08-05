@@ -11,10 +11,10 @@ const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   React.useEffect(() => {
-    if (type === 'Protected' && token) {
+    if (type === 'Protected' && token && navigate) {
       navigate('/');
     }
-    if (type === 'Private' && !token) {
+    if (type === 'Private' && !token && navigate) {
       navigate('/');
     }
   });

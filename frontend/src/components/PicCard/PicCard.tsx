@@ -3,84 +3,17 @@ import { Card, Modal } from 'antd';
 import Text from '../../styles/Text';
 import { styled } from 'styled-components';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import {
+  PicCardInfo,
+  PicCardStyle,
+  PicCardUserInfo,
+  PicModal,
+  PicModalContent,
+  PicModalImage,
+} from '../../styles/PicCardStyles';
+import PicCardProps from './PicCardProps.d';
 
 const { Meta } = Card;
-
-const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-`;
-
-const UserInfo = styled.div<{ display: string }>`
-  display: ${({ display }) => display};
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 5px;
-`;
-
-const CardStyle = styled(Card)`
-  width: calc(25% - 20px);
-  height: 313px;
-  background-color: white;
-  border-radius: 4px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 20px;
-
-  @media (max-width: 1024px) {
-    width: calc(50% - 20px);
-  }
-
-  @media (max-width: 768px) {
-    width: calc(50% - 20px);
-  }
-
-  @media (max-width: 480px) {
-    width: calc(100% - 20px);
-  }
-`;
-
-const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(0, 0, 0);
-  padding: 20px;
-  color: #fff;
-`;
-
-const ModalImage = styled.img`
-  width: 100%;
-  height: auto;
-`;
-
-const CustomModal = styled(Modal)`
-  .ant-modal-content {
-    background-color: transparent;
-    box-shadow: none;
-  }
-  .ant-modal-body {
-    background-color: rgba(
-      0,
-      0,
-      0,
-      0.8
-    ); /* Darker background with transparency */
-    padding: 0;
-  }
-`;
-
-type PicCardProps = {
-  imageSRC: string;
-  title: string;
-  username: string;
-  index: number;
-  pictureId: number;
-  date: string;
-  isFavorite?: boolean;
-  onFavoriteUpdate?: (index: number, pictureId: number) => void;
-};
 
 const PicCard: React.FC<PicCardProps> = ({
   imageSRC,
@@ -104,7 +37,7 @@ const PicCard: React.FC<PicCardProps> = ({
 
   return (
     <>
-      <CardStyle
+      <PicCardStyle
         hoverable
         cover={
           <div
@@ -127,8 +60,10 @@ const PicCard: React.FC<PicCardProps> = ({
         }
       >
         <Meta title={title} style={{ textAlign: 'center' }} />
-        <Info>
-          <UserInfo display={isFavorite === undefined ? 'block' : 'flex'}>
+        <PicCardInfo>
+          <PicCardUserInfo
+            display={isFavorite === undefined ? 'block' : 'flex'}
+          >
             <Text
               fontSize={15}
               color={'#00000073'}
@@ -143,19 +78,21 @@ const PicCard: React.FC<PicCardProps> = ({
                 {isFavorite ? (
                   <HeartFilled
                     key="favorite"
+                    data-testid={`heart-filled-${pictureId}`}
                     style={{ marginLeft: 8, color: 'red' }}
                     onClick={() => onFavoriteUpdate(index, pictureId)}
                   />
                 ) : (
                   <HeartOutlined
                     key="favorite"
+                    data-testid={`heart-outlined-${pictureId}`}
                     style={{ marginLeft: 8 }}
                     onClick={() => onFavoriteUpdate(index, pictureId)}
                   />
                 )}
               </>
             )}
-          </UserInfo>
+          </PicCardUserInfo>
           <Text
             fontSize={15}
             color={'#00000073'}
@@ -165,19 +102,18 @@ const PicCard: React.FC<PicCardProps> = ({
           >
             {date}
           </Text>
-        </Info>
-      </CardStyle>
+        </PicCardInfo>
+      </PicCardStyle>
 
-      <CustomModal
-        visible={isModalVisible}
+      <PicModal
+        open={isModalVisible}
         footer={null}
         onCancel={handleModalCancel}
         centered
-        bodyStyle={{ padding: 0, backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
         style={{ top: 20 }}
         width={'80%'}
       >
-        <ModalContent>
+        <PicModalContent>
           <div
             style={{
               display: 'flex',
@@ -194,15 +130,15 @@ const PicCard: React.FC<PicCardProps> = ({
               {date}
             </Text>
           </div>
-          <ModalImage
+          <PicModalImage
             alt={title}
             src={imageSRC}
             style={{
               marginTop: 10,
             }}
           />
-        </ModalContent>
-      </CustomModal>
+        </PicModalContent>
+      </PicModal>
     </>
   );
 };

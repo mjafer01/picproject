@@ -3,7 +3,7 @@ import GetAllFavoritePictures from '../../apis/favorites/GetAllFavoritePicturesA
 import ToggleFavoriteApi from '../../apis/favorites/ToggleFavoriteApis';
 
 import PictureDisplayPanel from '../../components/PictureDisplayPanel/PictureDisplayPanel';
-import { ParentContent } from '../../styles/MainContent';
+import { ParentContent } from '../../styles/ContentStyles';
 
 const FavouritePage: React.FC = () => {
   const ToggleFavoriteForwardApi = async (

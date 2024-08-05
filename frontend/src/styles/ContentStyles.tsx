@@ -39,5 +39,18 @@ const LinkSpan = styled.span`
   color: #1890ff;
   display: inline;
 `;
+const LinkMenu = styled.span`
+  cursor: pointer;
+  color: #1890ff;
+  display: block;
+  margin-top: 10px;
+`;
 
-export { ParentContent, MainContent, LazyContent, LoginContentBar, LinkSpan };
+export {
+  ParentContent,
+  MainContent,
+  LazyContent,
+  LoginContentBar,
+  LinkSpan,
+  LinkMenu,
+};

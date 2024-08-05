@@ -7,7 +7,7 @@ import {
   LinkSpan,
   LoginContentBar,
   ParentContent,
-} from '../../styles/MainContent';
+} from '../../styles/ContentStyles';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 

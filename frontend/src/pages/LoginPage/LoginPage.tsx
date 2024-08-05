@@ -1,5 +1,5 @@
 import React from 'react';
-import { ParentContent, MainContent } from '../../styles/MainContent';
+import { ParentContent, MainContent } from '../../styles/ContentStyles';
 import { AppTitle, PrimaryButton } from '../../components';
 import Text from '../../styles/Text';
 import { Input } from '../../styles/Input';

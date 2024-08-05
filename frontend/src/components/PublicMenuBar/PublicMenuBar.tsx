@@ -5,7 +5,8 @@ import {
   ButtonDiv,
   MobileMenuDiv,
 } from '../../styles/BarContainer';
-import { AppTitle, PrimaryButton } from '../index';
+import { PrimaryButton } from '../index';
+import AppTitle from '../AppTitle/AppTitle';
 import { MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Drawer } from 'antd';
@@ -52,7 +53,7 @@ const PublicMenuBar: React.FC = () => {
             title="PicShare"
             placement="left"
             onClose={onClose}
-            visible={visible}
+            open={visible}
             width={250}
           >
             <PrimaryButton

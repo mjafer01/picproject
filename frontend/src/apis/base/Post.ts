@@ -18,7 +18,7 @@ export const post = async (
     return response;
   } catch (error) {
     // Handle error accordingly
-    console.error('Error posting data:', error);
+    //console.log('Error posting data:', error);
     throw error;
   }
 };

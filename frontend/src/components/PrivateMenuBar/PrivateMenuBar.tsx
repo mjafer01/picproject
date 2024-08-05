@@ -8,7 +8,8 @@ import {
   RightMenuDiv,
   RightElementDiv,
 } from '../../styles/BarContainer';
-import { AppTitle, PrimaryButton } from '../index';
+import { PrimaryButton } from '../index';
+import AppTitle from '../AppTitle/AppTitle';
 import { MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, Modal, Button } from 'antd';
@@ -20,13 +21,15 @@ import {
 } from '../../styles/SharePicModal';
 import SharePictureApi from '../../apis/pictures/SharePictureApi';
 import { toast } from 'react-toastify';
+import { LinkMenu } from '../../styles/ContentStyles';
 
 const PrivateMenuBar: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 500);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 650 ?? false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pictureUrl, setPictureUrl] = useState('');
   const [title, setTitle] = useState('');
+  const username = localStorage.getItem('username');
 
   const navigate = useNavigate();
   const showDrawer = () => {
@@ -85,23 +88,50 @@ const PrivateMenuBar: React.FC = () => {
             title="PicShare"
             placement="left"
             onClose={onClose}
-            visible={visible}
+            open={visible}
             width={250}
           >
-            <PrimaryButton
-              value={'Login'}
-              width={78}
-              height={24}
-              onClick={handleClick}
+            <>Hi {username + ''}</>
+            <LinkMenu
+              onClick={() => {
+                navigate('/');
+              }}
             >
-              Log in
-            </PrimaryButton>
+              Home
+            </LinkMenu>
+            <LinkMenu
+              onClick={() => {
+                navigate('/favorites');
+              }}
+            >
+              Favorite
+            </LinkMenu>
+            <LinkMenu>
+              <PrimaryButton width={78} height={24} onClick={handleClick}>
+                Share Pic
+              </PrimaryButton>
+            </LinkMenu>
+            <LinkMenu>
+              <PrimaryButton
+                width={64}
+                height={24}
+                type={'link'}
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('username');
+                  navigate('/');
+                }}
+              >
+                Logout
+              </PrimaryButton>
+            </LinkMenu>
           </Drawer>
         </MobileMenuDiv>
       )}
       <AppTitle />
       {!isMobile && (
         <RightMenuDiv>
+          <LeftMenuBox>Hi {username + ''}</LeftMenuBox>
           <LeftMenuBox
             onClick={() => {
               navigate('/');
@@ -121,7 +151,7 @@ const PrivateMenuBar: React.FC = () => {
               Share Pic
             </PrimaryButton>
             <RightElementDiv paddingLeft={20}>
-              Hi {localStorage.getItem('username') ?? ''}
+              Hi {username ?? ''}
             </RightElementDiv>
 
             <RightElementDiv paddingLeft={20}>
@@ -132,7 +162,7 @@ const PrivateMenuBar: React.FC = () => {
                 onClick={() => {
                   localStorage.removeItem('token');
                   localStorage.removeItem('username');
-                  navigate('/favorites');
+                  navigate('/');
                 }}
               >
                 Logout
@@ -145,7 +175,7 @@ const PrivateMenuBar: React.FC = () => {
 
       <SharePicModel
         title={<span className="custom-modal-title">Share A New Picture</span>}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         footer={[
