@@ -102,7 +102,7 @@ const PrivateMenuBar: React.FC = () => {
           </LeftMenuBox>
           <LeftMenuBox
             onClick={() => {
-              navigate('/favorite');
+              navigate('/favorites');
             }}
           >
             Favourite
@@ -111,10 +111,21 @@ const PrivateMenuBar: React.FC = () => {
             <PrimaryButton width={78} height={24} onClick={handleClick}>
               Share Pic
             </PrimaryButton>
-            <RightElementDiv paddingLeft={20}>Hi Nic</RightElementDiv>
+            <RightElementDiv paddingLeft={20}>
+              Hi {localStorage.getItem('username') ?? ''}
+            </RightElementDiv>
 
             <RightElementDiv paddingLeft={20}>
-              <PrimaryButton width={64} height={24} type={'link'}>
+              <PrimaryButton
+                width={64}
+                height={24}
+                type={'link'}
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('username');
+                  navigate('/favorites');
+                }}
+              >
                 Logout
               </PrimaryButton>
             </RightElementDiv>

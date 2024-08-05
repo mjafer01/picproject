@@ -1,6 +1,6 @@
 import { DefaultRouteWithTemplate } from '../components';
 
-import { LoginPage, HomePage } from '../pages';
+import { LoginPage, HomePage, FavouritePage } from '../pages';
 
 const RoutePaths = [
   {
@@ -8,6 +8,15 @@ const RoutePaths = [
     element: (
       <DefaultRouteWithTemplate type={'Public'}>
         <HomePage />
+        FavouritePage
+      </DefaultRouteWithTemplate>
+    ),
+  },
+  {
+    path: '/favorites',
+    element: (
+      <DefaultRouteWithTemplate type={'Private'}>
+        <FavouritePage />
       </DefaultRouteWithTemplate>
     ),
   },

@@ -1,31 +1,29 @@
 import React from 'react';
-import GetAllPictures from '../../apis/pictures/GetAllPicturesApi';
+import GetAllFavoritePictures from '../../apis/favorites/GetAllFavoritePicturesApi';
 import ToggleFavoriteApi from '../../apis/favorites/ToggleFavoriteApis';
 
 import PictureDisplayPanel from '../../components/PictureDisplayPanel/PictureDisplayPanel';
 
-const HomePage: React.FC = () => {
+const FavouritePage: React.FC = () => {
   const ToggleFavoriteForwardApi = async (
     index: number,
     pictureId: number,
     pictures: any,
   ): Promise<any> => {
     if (await ToggleFavoriteApi(pictureId)) {
-      const updatedPictures = [...pictures];
-      updatedPictures[index] = {
-        ...updatedPictures[index],
-        isFavorite: !updatedPictures[index].isFavorite,
-      };
+      const updatedPictures = pictures.filter(
+        (picture: any) => picture.id !== pictureId,
+      );
       return updatedPictures;
     }
     return pictures;
   };
   return (
     <PictureDisplayPanel
-      GetAllPicturesApi={GetAllPictures}
+      GetAllPicturesApi={GetAllFavoritePictures}
       ToggleFavoriteApi={ToggleFavoriteForwardApi}
     />
   );
 };
 
-export default HomePage;
+export default FavouritePage;

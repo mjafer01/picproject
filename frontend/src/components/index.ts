@@ -4,6 +4,7 @@ import DefaultRouteWithTemplate from './RoutesWithTemplate/DefaultRouteWithTempl
 import PrivateMenuBar from './PrivateMenuBar/PrivateMenuBar';
 import PublicMenuBar from './PublicMenuBar/PublicMenuBar';
 import PicCard from './PicCard/PicCard';
+import PictureDisplayPanel from './PictureDisplayPanel/PictureDisplayPanel';
 
 export {
   AppTitle,
@@ -12,4 +13,5 @@ export {
   PrivateMenuBar,
   PublicMenuBar,
   PicCard,
+  PictureDisplayPanel,
 };

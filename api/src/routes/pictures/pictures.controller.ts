@@ -55,7 +55,7 @@ export class PicturesController {
       const { pictures, totalItems } = await this.picturesService.getPictures(pageNumber, limitNumber,userId);
       const totalPages = Math.ceil(totalItems / limitNumber);
 
-      if (pageNumber > totalPages) {
+      if (pageNumber > totalPages && totalPages > 0) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           message: 'Page number out of range',
           currentPage: parseInt(String(pageNumber)),
