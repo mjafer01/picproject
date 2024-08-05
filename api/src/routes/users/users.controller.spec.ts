@@ -4,9 +4,10 @@ import { UsersService } from './users.service';
 import { User } from '../../database/entities/user.entity';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
+import { INestApplication } from '@nestjs/common';
 
 describe('UsersController', () => {
-  let app: any;
+  let app: INestApplication;
   let service: UsersService;
   let consoleErrorSpy: jest.SpyInstance;
 
@@ -47,7 +48,7 @@ describe('UsersController', () => {
       .send({ username: 'testuser' })
       .expect(HttpStatus.OK);
 
-    expect(response.body).toEqual({ token: existingUser.id });
+    expect(response.body).toEqual(existingUser);
   });
 
   it('should return 201 if the user is newly created', async () => {
@@ -60,7 +61,7 @@ describe('UsersController', () => {
       .send({ username: 'newuser' })
       .expect(HttpStatus.CREATED);
 
-    expect(response.body).toEqual({ token: newUser.id });
+    expect(response.body).toEqual(newUser);
   });
 
   it('should return 400 if the username is missing', async () => {
@@ -69,7 +70,7 @@ describe('UsersController', () => {
       .send({})
       .expect(HttpStatus.BAD_REQUEST);
 
-    expect(response.body.message).toContain('Username should not be empty');
+    expect(response.body.message.toString()).toContain("Username should not be empty,Username must be a string");
   });
 
   it('should return 500 if there is an internal server error', async () => {

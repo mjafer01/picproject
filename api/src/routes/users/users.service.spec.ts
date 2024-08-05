@@ -25,6 +25,10 @@ describe('UsersService', () => {
     repository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
   describe('findUser', () => {
     it('should return a user if the username exists', async () => {
       const pictures: Picture[] = [];

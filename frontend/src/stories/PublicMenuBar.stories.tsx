@@ -4,7 +4,7 @@ import PublicMenuBar from '../components/PublicMenuBar/PublicMenuBar';
 import { MemoryRouter } from 'react-router-dom';
 
 export default {
-  title: 'Template/PublicMenuBar',
+  title: 'Components/PublicMenuBar',
   component: PublicMenuBar,
 } as Meta;
 
@@ -15,13 +15,7 @@ const Template: StoryFn<typeof PublicMenuBar> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {
-  title: 'Default Title',
-  loginPageLink: '/login',
-};
+Default.args = {};
 
 export const MobileView = Template.bind({});
-MobileView.args = {
-  title: 'Mobile View Title',
-  loginPageLink: '/login',
-};
+MobileView.args = {};

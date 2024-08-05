@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { Response } from 'express';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from '../../database/entities/user.entity';
+import { ResponseLoginUserDto } from './dto/response-login-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -14,20 +15,17 @@ export class UsersController {
   @ApiOperation({
     summary: 'User Login',
     description: 'This endpoint allows users to log in by providing a username. If the username exists, it returns a token for the user. If the username does not exist, it creates a new user and returns a token for the new user.',
+
   })
   @ApiResponse({
     status: 200,
     description: 'Existing user logged in successfully.',
-    type: [User],
+    type: ResponseLoginUserDto,
   })
   @ApiResponse({
     status: 201,
     description: 'New user created and logged in successfully.',
-    schema: {
-      example: {
-        token: 2,
-      },
-    },
+    type: ResponseLoginUserDto,
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @ApiResponse({

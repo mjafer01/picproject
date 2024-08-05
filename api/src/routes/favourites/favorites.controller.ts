@@ -3,6 +3,7 @@ import { FavoritesService } from './favorites.service';
 import { AuthGuard } from '../../auth/auth.guard';
 import { Response } from 'express';
 import { ApiTags, ApiHeader, ApiResponse, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { GetResponsePictureDto } from '../pictures/dto/get-response-picture.dto';
 
 @ApiTags('Favorites')
 @Controller('favorites')
@@ -27,7 +28,7 @@ export class FavoritesController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Favorite status toggled successfully.',
+    description: 'Favorite status toggled successfully.'
   })
   @ApiResponse({
     status: 404,
@@ -78,6 +79,7 @@ export class FavoritesController {
   @ApiResponse({
     status: 200,
     description: 'Successfully fetched favorite pictures.',
+    type: GetResponsePictureDto
   })
   @ApiResponse({
     status: 404,
@@ -99,9 +101,9 @@ export class FavoritesController {
     try {
       const userId = parseInt(authorization);
       const { pictures, totalItems } = await this.favoritesService.getFavoritePictures(userId, pageNumber, limitNumber);
-      const totalPages = Math.ceil(totalItems / limitNumber);
+      const totalPages = Math.ceil(totalItems / limitNumber) ?? 1;
 
-      if (pageNumber > totalPages && totalPages > 0) {
+      if (pageNumber > totalPages ) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           message: 'Page number out of range',
           currentPage: parseInt(String(pageNumber)),

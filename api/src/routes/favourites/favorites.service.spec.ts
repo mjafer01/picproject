@@ -158,4 +158,60 @@ describe('FavoritesService', () => {
       await expect(service.toggleFavorite(userId, pictureId)).rejects.toThrow('User or Picture not found');
     });
   });
+
+  describe('getFavoritePictures', () => {
+    it('should return favorite pictures with total items', async () => {
+      const userId = 1;
+      const page = 1;
+      const limit = 2;
+      const user: User = {
+        id: userId,
+        username: 'testuser',
+        pictures: [],
+        favorites: [],
+      } as User;
+      const picture: Picture = {
+        id: 1,
+        url: 'http://example.com/picture.jpg',
+        title: 'A beautiful sunset',
+        createdAt: new Date(),
+        user,
+      } as Picture;
+      const favorite: Favorite = { id: 1, user, picture } as Favorite;
+
+      jest.spyOn(usersService, 'findUserById').mockResolvedValue(user);
+      jest.spyOn(favoriteRepository, 'findAndCount').mockResolvedValue([[favorite], 1]);
+
+      const result = await service.getFavoritePictures(userId, page, limit);
+
+      expect(usersService.findUserById).toHaveBeenCalledWith(userId);
+      expect(favoriteRepository.findAndCount).toHaveBeenCalledWith({
+        where: { user },
+        relations: ['picture', 'picture.user'],
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      expect(result).toEqual({
+        pictures: [
+          {
+            ...picture,
+            user,
+            isFavorite: true,
+          },
+        ],
+        totalItems: 1,
+      });
+    });
+
+    it('should throw a NotFoundException if user is not found', async () => {
+      const userId = 1;
+      const page = 1;
+      const limit = 2;
+
+      jest.spyOn(usersService, 'findUserById').mockResolvedValue(null);
+
+      await expect(service.getFavoritePictures(userId, page, limit)).rejects.toThrow(NotFoundException);
+      await expect(service.getFavoritePictures(userId, page, limit)).rejects.toThrow('User not found');
+    });
+  });
 });

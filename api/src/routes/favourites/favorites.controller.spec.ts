@@ -47,8 +47,8 @@ describe('FavoritesController (e2e)', () => {
           useValue: {
             findById: jest.fn().mockImplementation((id: number) => {
               if (id === 1) {
-                let pictures:Picture[] = []
-                let favorites:Favorite[] = []
+                let pictures: Picture[] = []
+                let favorites: Favorite[] = []
                 const user = { id: 1, username: 'testuser', pictures, favorites };
                 return { id, url: 'http://example.com/picture.jpg', title: 'A beautiful sunset', createdAt: new Date(), user };
               }
@@ -121,6 +121,74 @@ describe('FavoritesController (e2e)', () => {
     it('should return 401 when the authorization header is missing', async () => {
       return request(app.getHttpServer())
         .post('/favorites/1')
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({ statusCode: 401, message: 'Invalid User', error: 'Unauthorized' });
+    });
+  });
+
+  describe('/favorites (GET)', () => {
+    it('should return 200 and the favorite pictures', async () => {
+      const favoritePicturesResponse ={
+        pictures: [
+          {
+            id: 1,
+            url: 'http://example.com/picture.jpg',
+            title: 'A beautiful sunset',
+            createdAt: new Date().toString(),
+            user: {
+              id: 1,
+              username: 'testuser',
+            },
+            isFavorite: true,
+          },
+        ],
+        totalItems:1
+      };
+
+      jest.spyOn(favoritesService, 'getFavoritePictures').mockResolvedValueOnce(favoritePicturesResponse as any);
+
+      return request(app.getHttpServer())
+        .get('/favorites')
+        .set('Authorization', '1')
+        .expect(HttpStatus.OK)
+        .expect((res) => {
+          expect(res.body).toEqual({pictures:favoritePicturesResponse.pictures,currentPage: 1,
+            totalPages:1,
+            hasNextPage:false
+        })});
+    });
+
+    it('should return 404 when user is not found', async () => {
+      jest.spyOn(favoritesService, 'getFavoritePictures').mockRejectedValueOnce(new NotFoundException('User not found'));
+
+      return request(app.getHttpServer())
+        .get('/favorites')
+        .set('Authorization', '1')
+        .expect(HttpStatus.NOT_FOUND)
+        .expect({ message: 'User not found' });
+    });
+
+    it('should return 500 for other errors', async () => {
+      jest.spyOn(favoritesService, 'getFavoritePictures').mockRejectedValueOnce(new Error('Error fetching favorite pictures'));
+
+      return request(app.getHttpServer())
+        .get('/favorites')
+        .set('Authorization', '1')
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect({ message: 'Error fetching favorite pictures' });
+    });
+
+    it('should return 401 when the authorization token is invalid', async () => {
+      return request(app.getHttpServer())
+        .get('/favorites')
+        .set('Authorization', 'invalid-token')
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect({ statusCode: 401, message: 'Invalid User', error: 'Unauthorized' });
+    });
+
+    it('should return 401 when the authorization header is missing', async () => {
+      return request(app.getHttpServer())
+        .get('/favorites')
         .expect(HttpStatus.UNAUTHORIZED)
         .expect({ statusCode: 401, message: 'Invalid User', error: 'Unauthorized' });
     });

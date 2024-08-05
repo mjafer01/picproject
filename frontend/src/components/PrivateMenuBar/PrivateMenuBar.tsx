@@ -131,7 +131,6 @@ const PrivateMenuBar: React.FC = () => {
       <AppTitle />
       {!isMobile && (
         <RightMenuDiv>
-          <LeftMenuBox>Hi {username + ''}</LeftMenuBox>
           <LeftMenuBox
             onClick={() => {
               navigate('/');

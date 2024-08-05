@@ -164,7 +164,7 @@ describe('PicturesController (e2e)', () => {
   describe('/pictures (GET)', () => {
     it('should return 200 and pictures when pictures are fetched successfully', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
         { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
       ];
@@ -177,11 +177,12 @@ describe('PicturesController (e2e)', () => {
         .expect(HttpStatus.OK)
         .expect((res) => {
           expect(res.body).toEqual({
-            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+            pictures: pictures.map(({ id, url, title, createdAt, user }) => ({
               id,
               url,
               title,
               createdAt: createdAt.toISOString(), // Convert createdAt to string
+              user,
             })),
             currentPage: 1,
             totalPages: 1,
@@ -202,7 +203,7 @@ describe('PicturesController (e2e)', () => {
 
     it('should return 200 and pictures when page is missing', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
         { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
       ];
@@ -215,11 +216,12 @@ describe('PicturesController (e2e)', () => {
         .expect(HttpStatus.OK)
         .expect((res) => {
           expect(res.body).toEqual({
-            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+            pictures: pictures.map(({ id, url, title, createdAt, user }) => ({
               id,
               url,
               title,
               createdAt: createdAt.toISOString(), // Convert createdAt to string
+              user,
             })),
             currentPage: 1,
             totalPages: 1,
@@ -230,7 +232,7 @@ describe('PicturesController (e2e)', () => {
 
     it('should return 200 and pictures when limit is missing', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
         { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
       ];
@@ -243,11 +245,12 @@ describe('PicturesController (e2e)', () => {
         .expect(HttpStatus.OK)
         .expect((res) => {
           expect(res.body).toEqual({
-            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+            pictures: pictures.map(({ id, url, title, createdAt, user }) => ({
               id,
               url,
               title,
               createdAt: createdAt.toISOString(), // Convert createdAt to string
+              user,
             })),
             currentPage: 1,
             totalPages: 1,
@@ -258,7 +261,7 @@ describe('PicturesController (e2e)', () => {
 
     it('should return 200 and pictures when both page and limit are missing', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
         { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
       ];
@@ -270,11 +273,12 @@ describe('PicturesController (e2e)', () => {
         .expect(HttpStatus.OK)
         .expect((res) => {
           expect(res.body).toEqual({
-            pictures: pictures.map(({ id, url, title, createdAt }) => ({
+            pictures: pictures.map(({ id, url, title, createdAt, user }) => ({
               id,
               url,
               title,
               createdAt: createdAt.toISOString(), // Convert createdAt to string
+              user,
             })),
             currentPage: 1,
             totalPages: 1,
@@ -285,7 +289,7 @@ describe('PicturesController (e2e)', () => {
 
     it('should return 400 and indicate no more pages when pageNumber is out of range', async () => {
       const user: User = { id: 1, username: 'testuser', pictures: [], favorites: [] } as User;
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: new Date(), user },
         { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: new Date(), user },
       ];
@@ -328,8 +332,8 @@ describe('PicturesController (e2e)', () => {
         .expect((res) => {
           expect(res.body).toEqual({
             pictures: [
-              { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: pictures[0].createdAt.toISOString(), isFavorite: true },
-              { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: pictures[1].createdAt.toISOString(), isFavorite: false },
+              { id: 1, url: 'http://example.com/picture1.jpg', title: 'Picture 1', createdAt: pictures[0].createdAt.toISOString(), isFavorite: true, user },
+              { id: 2, url: 'http://example.com/picture2.jpg', title: 'Picture 2', createdAt: pictures[1].createdAt.toISOString(), isFavorite: false, user },
             ],
             currentPage: 1,
             totalPages: 1,

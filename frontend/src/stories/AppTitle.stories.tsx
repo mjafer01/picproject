@@ -1,7 +1,6 @@
 import React from 'react';
-import type { Meta, StoryObj, StoryFn } from '@storybook/react';
-import { fn } from '@storybook/test';
-import { Button } from './Button';
+import type { Meta, StoryFn } from '@storybook/react';
+
 import { BrowserRouter } from 'react-router-dom';
 import AppTitle from '../components/AppTitle/AppTitle';
 

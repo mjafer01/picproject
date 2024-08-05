@@ -21,7 +21,7 @@ export class PicturesController {
   @ApiResponse({
     status: 200,
     description: 'Successfully fetched pictures.',
-    type: [GetResponsePictureDto],
+    type: GetResponsePictureDto
   })
   @ApiResponse({
     status: 400,

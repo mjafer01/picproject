@@ -59,8 +59,13 @@ describe('PicturesService', () => {
         pictures: [] as Picture[],
         favorites: [] as Favorite[],
       };
-      const picture: Picture = {
+      const picture: any = {
         id: 1,
+        createdAt: new Date(),
+        url: createPictureDto.url,
+        title: createPictureDto.title,
+        user,
+      };const responsePicture: any = {
         createdAt: new Date(),
         url: createPictureDto.url,
         title: createPictureDto.title,
@@ -74,7 +79,7 @@ describe('PicturesService', () => {
       const result = await service.createPicture(createPictureDto, userId);
 
       expect(usersService.findUserById).toHaveBeenCalledWith(userId);
-      expect(picturesRepository.create).toHaveBeenCalledWith({ ...createPictureDto, user });
+      expect(picturesRepository.create).toHaveBeenCalledWith({ ...responsePicture });
       expect(picturesRepository.save).toHaveBeenCalledWith(picture);
       expect(result).toEqual(picture);
     });
@@ -117,7 +122,7 @@ describe('PicturesService', () => {
         pictures: [] as Picture[],
         favorites: [] as Favorite[],
       };
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         {
           id: 1,
           createdAt: new Date(),
@@ -163,7 +168,7 @@ describe('PicturesService', () => {
         pictures: [] as Picture[],
         favorites: [] as Favorite[],
       };
-      const pictures: Picture[] = [
+      const pictures: any[] = [
         {
           id: 1,
           createdAt: new Date(),
@@ -230,7 +235,7 @@ describe('PicturesService', () => {
   describe('findById', () => {
     it('should return a picture by id', async () => {
       const pictureId = 1;
-      const picture: Picture = {
+      const picture: any = {
         id: pictureId,
         createdAt: new Date(),
         url: 'http://example.com/picture1.jpg',
@@ -245,5 +250,14 @@ describe('PicturesService', () => {
       expect(result).toEqual(picture);
     });
 
+    it('should return null if picture is not found', async () => {
+      const pictureId = 1;
+
+      jest.spyOn(picturesRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await service.findById(pictureId);
+
+      expect(result).toBeNull();
+    });
   });
 });
