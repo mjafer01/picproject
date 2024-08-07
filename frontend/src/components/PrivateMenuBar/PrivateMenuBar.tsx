@@ -97,7 +97,7 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({ activemenu }) => {
           NavigateTo(link);
         }}
       >
-        {title}
+        {navTitle}
       </LeftMenuBox>
     );
   };
