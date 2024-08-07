@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
 
 interface ApiResponse {
   success: boolean;
@@ -17,8 +18,10 @@ export const post = async (
     });
     return response;
   } catch (error) {
-    // Handle error accordingly
-    //console.log('Error posting data:', error);
+    toast.dismiss();
+    toast.error(
+      'Something has gone horribly wrong. Please contact support for further details',
+    );
     throw error;
   }
 };
