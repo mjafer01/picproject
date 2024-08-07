@@ -1,7 +1,4 @@
-import { DefaultRouteWithTemplate } from '../components';
-
 import { LoginPage, HomePage, FavouritePage, Logout } from '../pages';
-import { NavigateComponent } from '../utils/NavigateTo';
 
 const RoutePaths = [
   {

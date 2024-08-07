@@ -5,6 +5,7 @@ import PrivateMenuBar from './PrivateMenuBar/PrivateMenuBar';
 import PublicMenuBar from './PublicMenuBar/PublicMenuBar';
 import PicCard from './PicCard/PicCard';
 import PictureDisplayPanel from './PictureDisplayPanel/PictureDisplayPanel';
+import PrivateDesktopMenu from './PrivateMenuBar/PrivateDesktopMenu';
 
 export {
   AppTitle,
@@ -14,4 +15,5 @@ export {
   PublicMenuBar,
   PicCard,
   PictureDisplayPanel,
+  PrivateDesktopMenu,
 };

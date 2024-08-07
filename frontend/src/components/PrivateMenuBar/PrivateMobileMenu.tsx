@@ -3,26 +3,18 @@ import { Drawer } from 'antd';
 import { LinkMenu } from '../../styles/ContentStyles';
 import { NavigateTo } from '../../utils/NavigateTo';
 import { PrimaryButton } from '../index';
-import {
-  LeftMenuActiveBox,
-  LeftMenuBox,
-  MobileMenuDiv,
-} from '../../styles/BarContainer';
+import { MobileMenuDiv } from '../../styles/BarContainer';
 import React, { useState } from 'react';
+import { PrivateTopMenu } from '../../constants/RoutePaths';
+import GlobalVariables from '../../constants/Global';
 type PrivateMobileMenuProps = {
   username: string;
   handleClick: any;
   menuTitle: string;
 };
-
-import { PrivateTopMenu } from '../../constants/RoutePaths';
-import GlobalVariables from '../../constants/Global';
-import { Global } from '@emotion/react';
-
 const PrivateMobileMenu: React.FC<PrivateMobileMenuProps> = ({
   username,
   handleClick,
-  menuTitle,
 }) => {
   const [visible, setVisible] = useState(false);
 

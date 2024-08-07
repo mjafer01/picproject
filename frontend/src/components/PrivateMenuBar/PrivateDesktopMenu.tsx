@@ -16,7 +16,6 @@ type PrivateDesktopMenuProps = {
   handleClick: any;
   menuTitle: string;
 };
-
 const PrivateDesktopMenu: React.FC<PrivateDesktopMenuProps> = ({
   username,
   handleClick,

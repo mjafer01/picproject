@@ -1,18 +1,22 @@
 import React from 'react';
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 import { BrowserRouter } from 'react-router-dom';
-import AppTitle from '../components/AppTitle/AppTitle';
+import AppTitle from './AppTitle';
+import { PictureDisplayPanel } from '../index';
 
-// Define the component metadata
-export default {
+const meta: Meta<typeof AppTitle> = {
   title: 'Components/AppTitle',
   component: AppTitle,
-  argTypes: {
-    height: { control: 'number' },
-    width: { control: 'number' },
+  parameters: {
+    layout: 'centered',
   },
-} as Meta<typeof AppTitle>;
+  tags: ['autodocs'],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 // Template for the component stories
 const Template: StoryFn<typeof AppTitle> = (args) => (

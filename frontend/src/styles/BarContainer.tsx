@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-import { ButtonProps as AntButtonProps } from 'antd/es/button/button';
 
 const BarContainer = styled.div`
   width: 100%;

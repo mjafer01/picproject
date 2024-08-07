@@ -105,7 +105,6 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
     }
     return <>{elements}</>;
   };
-
   return <LazyContent>{RenderPictures()}</LazyContent>;
 };
 

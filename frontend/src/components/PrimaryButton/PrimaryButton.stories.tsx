@@ -1,22 +1,20 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
-import PrimaryButton from '../components/PrimaryButton/PrimaryButton';
+import { Meta, StoryFn, StoryObj } from '@storybook/react';
+import PrimaryButton from './PrimaryButton';
+import PrivateDesktopMenu from '../PrivateMenuBar/PrivateDesktopMenu';
 
-export default {
+const meta: Meta<typeof PrimaryButton> = {
   title: 'Components/PrimaryButton',
   component: PrimaryButton,
-  argTypes: {
-    type: {
-      control: {
-        type: 'select',
-        options: ['primary', 'default', 'dashed', 'link', 'text'],
-      },
-    },
-    width: { control: 'number' },
-    height: { control: 'number' },
-    onClick: { action: 'clicked' },
+  parameters: {
+    layout: 'centered',
   },
-} as Meta<typeof PrimaryButton>;
+  tags: ['autodocs'],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 const Template: StoryFn<typeof PrimaryButton> = (args) => (
   <PrimaryButton {...args} />

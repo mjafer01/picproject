@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Modal, Input, Button } from 'antd';
+import { Modal } from 'antd';
 
 const SharePicModel = styled(Modal)`
   .ant-modal {
