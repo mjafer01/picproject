@@ -16,7 +16,7 @@ const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
     if (type === 'Protected' && token) {
       NavigateTo('/');
     }
-    if (type === 'Private' && token) {
+    if (type === 'Private' && !token) {
       NavigateTo('/');
     }
     console.log(token);
