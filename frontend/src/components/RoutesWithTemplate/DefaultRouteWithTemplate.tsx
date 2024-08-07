@@ -2,24 +2,31 @@ import React from 'react';
 import { AppTitle } from '../';
 import Template from '../../templates/Template';
 import DefaultRouteWithTemplateProps from './DefaultRouteWithTemplateProps.d';
-import { useNavigate } from 'react-router-dom';
+import { NavigateTo } from '../../utils/NavigateTo';
 
 const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
   children,
   type,
-  activemenu
+  activemenu,
 }) => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const [token, setToken] = React.useState(localStorage.getItem('token'));
+
   React.useEffect(() => {
-    if (type === 'Protected' && token && navigate) {
-      navigate('/');
+    setToken(localStorage.getItem('token'));
+    if (type === 'Protected' && token) {
+      NavigateTo('/');
     }
-    if (type === 'Private' && !token && navigate) {
-      navigate('/');
+    if (type === 'Private' && token) {
+      NavigateTo('/');
     }
+    console.log(token);
   });
-  return <Template isLoggedIn={!!token} activemenu={activemenu}>{children}</Template>;
+  console.log(token);
+  return (
+    <Template isLoggedIn={!!token} activemenu={activemenu}>
+      {children}
+    </Template>
+  );
 };
 
 export default DefaultRouteWithTemplate;

@@ -6,12 +6,13 @@ import {
   LeftMenuBox,
   MobileMenuDiv,
   RightMenuDiv,
-  RightElementDiv, LeftMenuActiveBox,
+  RightElementDiv,
+  LeftMenuActiveBox,
 } from '../../styles/BarContainer';
 import { PrimaryButton } from '../index';
 import AppTitle from '../AppTitle/AppTitle';
 import { MenuOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { NavigateTo } from '../../utils/NavigateTo';
 import { Drawer, Modal, Button } from 'antd';
 import { Input } from '../../styles/Input';
 import {
@@ -23,10 +24,10 @@ import SharePictureApi from '../../apis/pictures/SharePictureApi';
 import { toast } from 'react-toastify';
 import { LinkMenu } from '../../styles/ContentStyles';
 type PrivateMenuBarProps = {
-  activemenu?:string
-}
+  activemenu?: string;
+};
 
-const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
+const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({ activemenu }) => {
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 650 ?? false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,7 +35,6 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
   const [title, setTitle] = useState('');
   const username = localStorage.getItem('username');
 
-  const navigate = useNavigate();
   const showDrawer = () => {
     setVisible(true);
   };
@@ -55,7 +55,6 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
       return;
     }
     await SharePictureApi(pictureUrl, title);
-    navigate('/');
     toast.dismiss();
     toast.success('Picture shared');
     setTimeout(() => window.location.reload(), 1000);
@@ -80,25 +79,28 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
     };
   }, []);
 
-  const LeftMenu = (title:string,link:string) =>{
-
-    if(title === activemenu){
-      return (<LeftMenuActiveBox
+  const LeftMenu = (navTitle: string, link: string) => {
+    if (navTitle === activemenu) {
+      return (
+        <LeftMenuActiveBox
+          onClick={() => {
+            NavigateTo(link);
+          }}
+        >
+          {navTitle}
+        </LeftMenuActiveBox>
+      );
+    }
+    return (
+      <LeftMenuBox
         onClick={() => {
-          navigate(link);
+          NavigateTo(link);
         }}
       >
         {title}
-      </LeftMenuActiveBox>)
-    }
-    return (<LeftMenuBox
-      onClick={() => {
-        navigate(link);
-      }}
-    >
-      {title}
-    </LeftMenuBox>)
-  }
+      </LeftMenuBox>
+    );
+  };
 
   return (
     <BarContainer>
@@ -117,14 +119,14 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
             <>Hi {username + ''}</>
             <LinkMenu
               onClick={() => {
-                navigate('/');
+                NavigateTo('/');
               }}
             >
               Home
             </LinkMenu>
             <LinkMenu
               onClick={() => {
-                navigate('/favorites');
+                NavigateTo('/favorites');
               }}
             >
               Favorite
@@ -140,9 +142,7 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
                 height={24}
                 type={'link'}
                 onClick={() => {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('username');
-                  navigate('/');
+                  NavigateTo('/logout');
                 }}
               >
                 Logout
@@ -154,8 +154,8 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
       <AppTitle />
       {!isMobile && (
         <RightMenuDiv>
-          {LeftMenu ('Home','/')}
-          {LeftMenu ('Favourite','/favorites')}
+          {LeftMenu('Home', '/')}
+          {LeftMenu('Favourite', '/favorites')}
           <ButtonDiv>
             <PrimaryButton width={78} height={24} onClick={handleClick}>
               Share Pic
@@ -170,9 +170,7 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({activemenu}) => {
                 height={24}
                 type={'link'}
                 onClick={() => {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('username');
-                  navigate('/');
+                  NavigateTo('/logout');
                 }}
               >
                 Logout

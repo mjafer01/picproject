@@ -8,11 +8,10 @@ import {
   LoginContentBar,
   ParentContent,
 } from '../../styles/ContentStyles';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { NavigateTo } from '../../utils/NavigateTo';
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
   const userId = parseInt(localStorage.getItem('token') + '');
   const ToggleFavoriteForwardApi = async (
     index: number,
@@ -41,8 +40,8 @@ const HomePage: React.FC = () => {
       {!userId && (
         <ParentContent>
           <LoginContentBar>
-            <LinkSpan onClick={() => navigate('/login')}>login</LinkSpan>&nbsp;
-            to start sharing your favourite pictures with others!
+            <LinkSpan onClick={() => NavigateTo('/login')}>login</LinkSpan>
+            &nbsp; to start sharing your favourite pictures with others!
           </LoginContentBar>
         </ParentContent>
       )}

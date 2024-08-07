@@ -12,6 +12,7 @@ const App: React.FC<TApp> = ({ urlPaths }) => {
   return (
     <>
       <RouterProvider router={urlPaths} />
+
       <ToastContainer />
     </>
   );

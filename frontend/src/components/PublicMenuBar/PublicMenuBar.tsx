@@ -8,13 +8,12 @@ import {
 import { PrimaryButton } from '../index';
 import AppTitle from '../AppTitle/AppTitle';
 import { MenuOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import { Drawer } from 'antd';
+import { NavigateTo } from '../../utils/NavigateTo';
 const PublicMenuBar: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 500);
 
-  const navigate = useNavigate();
   const showDrawer = () => {
     setVisible(true);
   };
@@ -24,7 +23,7 @@ const PublicMenuBar: React.FC = () => {
   };
 
   const handleClick = () => {
-    navigate('/login');
+    NavigateTo('/login');
   };
 
   useEffect(() => {
