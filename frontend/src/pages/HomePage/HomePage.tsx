@@ -19,8 +19,8 @@ const HomePage: React.FC = () => {
     pictures: any,
   ): Promise<any> => {
     if (
-      (await ToggleFavoriteApi(pictureId)) &&
-      pictures[index].user.id !== userId
+      pictures[index].user.id !== userId &&
+      (await ToggleFavoriteApi(pictureId))
     ) {
       const updatedPictures = [...pictures];
       updatedPictures[index] = {

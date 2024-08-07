@@ -26,9 +26,10 @@ const GetAllPictures = async (
     GlobalVariables.apiHost + '/pictures?page=' + page + '&limit=' + limit,
     token,
   );
-  if (response.status === 200) {
+  if (response.status === 200 || response.status === 400) {
     return response.data as any;
   }
+
   return [] as any;
 };
 export default GetAllPictures;

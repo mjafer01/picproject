@@ -32,8 +32,8 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
       lastApiResponse.current.currentPage + 1,
       calculateInitialLimit() ?? 12,
     );
+    toast.dismiss();
     if (lastApiResponse.current.pictures) {
-      toast.dismiss();
       setPictures((prevPictures: any) => {
         const newPictures = lastApiResponse.current.pictures.filter(
           (newPic: any) =>
