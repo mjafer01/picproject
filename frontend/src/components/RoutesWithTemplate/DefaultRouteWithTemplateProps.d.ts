@@ -1,6 +1,7 @@
-type DefaultRouteWithTemplateProps = {
+import PrivateMenuBarProps from '../PrivateMenuBar/PrivateMenuBarProps.d';
+
+type DefaultRouteWithTemplateProps = PrivateMenuBarProps & {
   children: any;
   type: 'Private' | 'Public' | 'Protected';
-  activemenu?:string;
 };
 export default DefaultRouteWithTemplateProps;

@@ -1,7 +1,8 @@
-type TemplateProps = {
+import PrivateMenuBarProps from '../components/PrivateMenuBar/PrivateMenuBarProps.d';
+
+type TemplateProps = PrivateMenuBarProps & {
   isLoggedIn: boolean;
   children: any;
-  activemenu?:string;
 };
 
 export default TemplateProps;

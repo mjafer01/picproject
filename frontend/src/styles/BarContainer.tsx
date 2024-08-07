@@ -50,19 +50,19 @@ const LeftMenuActiveBox = styled.div`
   height: 64px;
   display: flex;
   font-size: 14px;
-  color: #0964FF;
+  color: #0964ff;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-    border-bottom: 1px solid #0964FF;
+  border-bottom: 1px solid #0964ff;
   margin: auto;
 `;
 interface RightElementDivProps {
-  paddingLeft: number;
+  paddingleft: number;
 }
 const RightElementDiv = styled.div<RightElementDivProps>`
-  ${({ paddingLeft }) =>
-    paddingLeft !== undefined && `padding-left: ${paddingLeft}px;`}
+  ${({ paddingleft }) =>
+    paddingleft !== undefined && `padding-left: ${paddingleft}px;`}
   font-size: 12px;
   color: #000000;
   display: flex;
@@ -85,5 +85,5 @@ export {
   RightMenuDiv,
   RightElementDiv,
   CustomModalTitle,
-  LeftMenuActiveBox
+  LeftMenuActiveBox,
 };

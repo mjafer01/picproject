@@ -8,17 +8,17 @@ import PublicMenuBar from '../components/PublicMenuBar/PublicMenuBar';
 const Template: React.FC<TemplateProps> = ({
   children,
   isLoggedIn,
-  activemenu,
+  menuTitle,
 }) => {
   return (
     <>
       <GlobalStyles />
       {isLoggedIn ? (
-        <PrivateMenuBar activemenu={activemenu} />
+        <PrivateMenuBar menuTitle={menuTitle} />
       ) : (
         <PublicMenuBar />
       )}
-      <TemplateSpace height={4} maxHeight={30} />
+      <TemplateSpace height={4} maxheight={30} />
       {children}
     </>
   );

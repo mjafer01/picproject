@@ -69,7 +69,7 @@ const PicCard: React.FC<PicCardProps> = ({
               color={'#00000073'}
               padding={0}
               margin={0}
-              textAlign={isFavorite === undefined ? 'center' : 'left'}
+              textalign={isFavorite === undefined ? 'center' : 'left'}
             >
               {username}
             </Text>
@@ -98,7 +98,7 @@ const PicCard: React.FC<PicCardProps> = ({
             color={'#00000073'}
             padding={0}
             margin={0}
-            textAlign={isFavorite === undefined ? 'center' : 'left'}
+            textalign={isFavorite === undefined ? 'center' : 'left'}
           >
             {date}
           </Text>

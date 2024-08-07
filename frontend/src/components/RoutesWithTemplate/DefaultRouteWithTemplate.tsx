@@ -7,7 +7,7 @@ import { NavigateTo } from '../../utils/NavigateTo';
 const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
   children,
   type,
-  activemenu,
+  menuTitle,
 }) => {
   const [token, setToken] = React.useState(localStorage.getItem('token'));
 
@@ -19,11 +19,9 @@ const DefaultRouteWithTemplate: React.FC<DefaultRouteWithTemplateProps> = ({
     if (type === 'Private' && !token) {
       NavigateTo('/');
     }
-    console.log(token);
   });
-  console.log(token);
   return (
-    <Template isLoggedIn={!!token} activemenu={activemenu}>
+    <Template isLoggedIn={!!token} menuTitle={menuTitle}>
       {children}
     </Template>
   );

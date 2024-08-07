@@ -5,14 +5,14 @@ interface TextProps {
   fontSize: number;
   padding?: number;
   margin?: number;
-  textAlign?: string;
+  textalign?: string;
 }
 const Text = styled.p<TextProps>`
   ${({ fontSize }) => fontSize !== undefined && `font-size: ${fontSize}px;`}
   ${({ color }) => color !== undefined && `color: ${color};`}
   ${({ padding }) => padding !== undefined && `padding: ${padding}px;`}
   ${({ margin }) => margin !== undefined && `margin: ${margin};`}
-  ${({ textAlign }) => textAlign !== undefined && `text-align: ${textAlign};`}
+  ${({ textalign }) => textalign !== undefined && `text-align: ${textalign};`}
     font-family: Roboto, serif;
 `;
 

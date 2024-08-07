@@ -11,7 +11,6 @@ const AppTitle: React.FC<AppTitleProps> = ({ height, width }) => {
       height={height ?? 35}
       width={width ?? 134}
       onClick={() => navigate('/')}
-      activateHandleCursor
     >
       <Logo />
     </TitleBar>

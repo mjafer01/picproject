@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
         <Text fontSize={15} color={'#00000073'}>
           Login to start sharing
         </Text>
-        <TemplateSpace height={15} maxHeight={15} />
+        <TemplateSpace height={15} maxheight={15} />
 
         <Input
           width={216}
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
           }}
         />
 
-        <TemplateSpace height={20} maxHeight={20} />
+        <TemplateSpace height={20} maxheight={20} />
 
         <PrimaryButton width={71} height={32} onClick={onSubmit}>
           Login
