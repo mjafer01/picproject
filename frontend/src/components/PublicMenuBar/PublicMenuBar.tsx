@@ -45,7 +45,7 @@ const PublicMenuBar: React.FC = () => {
     <BarContainer>
       <BarSpace />
       {isMobile && (
-        <MobileMenuDiv>
+        <MobileMenuDiv data-testid={'mobile-menu-' + visible}>
           <MenuOutlined onClick={showDrawer} />
 
           <Drawer

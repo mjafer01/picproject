@@ -18,4 +18,5 @@ export default {
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   testTimeout: 10000,
+  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
 };

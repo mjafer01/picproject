@@ -8,7 +8,7 @@ import SharePicForm from '../SharePicForm/SharePicForm';
 import PrivateMenuBarProps from './PrivateMenuBarProps.d';
 
 const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({ menuTitle }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 650 ?? false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 700 ?? false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const username = localStorage.getItem('username');
 
@@ -22,7 +22,7 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({ menuTitle }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 500);
+      setIsMobile(window.innerWidth <= 700);
     };
 
     window.addEventListener('resize', handleResize);
@@ -34,6 +34,7 @@ const PrivateMenuBar: React.FC<PrivateMenuBarProps> = ({ menuTitle }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  console.log(window.innerWidth);
 
   return (
     <BarContainer>

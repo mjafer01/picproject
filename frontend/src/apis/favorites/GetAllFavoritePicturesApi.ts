@@ -26,6 +26,7 @@ const GetAllFavoritePictures = async (
     GlobalVariables.apiHost + '/favorites?page=' + page + '&limit=' + limit,
     token,
   );
+  console.log(response);
 
   if (response.status === 200 || response.status === 400) {
     return response.data as any;

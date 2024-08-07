@@ -8,11 +8,7 @@ import {
   InputBox,
   ActionButtonBox,
 } from '../../styles/SharePicModal';
-
-type SharePicFormProps = {
-  isModalVisible: boolean;
-  handleModalCancel: () => void;
-};
+import SharePicFormProps from './SharePicFormProps.d';
 
 const SharePicForm: React.FC<SharePicFormProps> = ({
   isModalVisible,

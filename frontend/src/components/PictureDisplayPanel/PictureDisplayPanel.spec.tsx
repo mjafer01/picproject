@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import PictureDisplayPanel from './PictureDisplayPanel';
 import { toast } from 'react-toastify';
-import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('react-toastify', () => ({

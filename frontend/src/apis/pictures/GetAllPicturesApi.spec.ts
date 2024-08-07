@@ -1,7 +1,6 @@
 import get from '../base/Get';
 import GlobalVariables from '../../constants/Global';
 import GetAllPictures from './GetAllPicturesApi';
-import mockAxios from 'jest-mock-axios';
 
 jest.mock('../base/Get', () => jest.fn());
 
@@ -15,7 +14,7 @@ describe('GetAllPictures', () => {
   });
 
   afterEach(() => {
-    mockAxios.reset();
+    jest.clearAllMocks();
     localStorage.clear();
   });
 
@@ -58,12 +57,36 @@ describe('GetAllPictures', () => {
     expect(result).toEqual(mockResponse.data);
   });
 
-  it('should return an empty array when the response status is not 200', async () => {
-    const mockResponse = { status: 400 };
+  it('should return response data when the request returns a 400 status', async () => {
+    const mockResponse = {
+      status: 400,
+      data: {
+        message: 'Page number out of range',
+        currentPage: 1,
+        totalPages: 0,
+      },
+    };
     (get as jest.Mock).mockResolvedValue(mockResponse);
 
     const result = await GetAllPictures(page, limit);
 
+    expect(get).toHaveBeenCalledWith(
+      `${GlobalVariables.apiHost}/pictures?page=${page}&limit=${limit}`,
+      token,
+    );
+    expect(result).toEqual(mockResponse.data);
+  });
+
+  it('should return an empty array when the response status is neither 200 nor 400', async () => {
+    const mockResponse = { status: 500 };
+    (get as jest.Mock).mockResolvedValue(mockResponse);
+
+    const result = await GetAllPictures(page, limit);
+
+    expect(get).toHaveBeenCalledWith(
+      `${GlobalVariables.apiHost}/pictures?page=${page}&limit=${limit}`,
+      token,
+    );
     expect(result).toEqual([]);
   });
 });

@@ -8,13 +8,14 @@ import {
 } from '../../styles/BarContainer';
 import { NavigateTo } from '../../utils/NavigateTo';
 import { PrimaryButton } from '../index';
+
+import { PrivateTopMenu } from '../../constants/RoutePaths';
+import GlobalVariables from '../../constants/Global';
 type PrivateDesktopMenuProps = {
   username: string;
   handleClick: any;
   menuTitle: string;
 };
-import { PrivateTopMenu } from '../../constants/RoutePaths';
-import GlobalVariables from '../../constants/Global';
 
 const PrivateDesktopMenu: React.FC<PrivateDesktopMenuProps> = ({
   username,

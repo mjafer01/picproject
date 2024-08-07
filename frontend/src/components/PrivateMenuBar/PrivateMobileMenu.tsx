@@ -52,7 +52,7 @@ const PrivateMobileMenu: React.FC<PrivateMobileMenuProps> = ({
   };
 
   return (
-    <MobileMenuDiv>
+    <MobileMenuDiv data-testid={'mobile-menu-' + visible}>
       <MenuOutlined onClick={showDrawer} />
 
       <Drawer

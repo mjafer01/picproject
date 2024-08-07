@@ -2,67 +2,70 @@ import React, { act } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import PublicMenuBar from './PublicMenuBar';
-import { MemoryRouter } from 'react-router-dom';
+import { NavigateTo } from '../../utils/NavigateTo';
 
-jest.mock('../AppTitle/AppTitle', () => () => <div>Logo</div>);
-jest.mock('@ant-design/icons', () => ({
-  MenuOutlined: () => <div>MenuOutlined</div>,
+jest.mock('../../utils/NavigateTo', () => ({
+  NavigateTo: jest.fn(),
 }));
 
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+jest.mock('../AppTitle/AppTitle', () => () => <div>AppTitle</div>);
 
 describe('PublicMenuBar', () => {
   beforeEach(() => {
-    mockNavigate.mockClear();
+    jest.clearAllMocks();
   });
 
-  it('renders correctly', async () => {
-    render(
-      <MemoryRouter>
-        <PublicMenuBar />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText('Logo')).toBeInTheDocument();
+  it('renders AppTitle component', () => {
+    render(<PublicMenuBar />);
+    expect(screen.getByText('AppTitle')).toBeInTheDocument();
   });
 
-  it('handles login button click correctly', async () => {
+  it('renders login button in the drawer when mobile', () => {
+    (global as any).innerWidth = 500;
     act(() => {
-      (window as any).innerWidth = 800; // Mocking mobile width
       window.dispatchEvent(new Event('resize'));
     });
-    render(
-      <MemoryRouter>
-        <PublicMenuBar />
-      </MemoryRouter>,
-    );
+
+    render(<PublicMenuBar />);
+
+    const menuIcon = screen.getByRole('img', { name: /menu/i });
+    fireEvent.click(menuIcon);
+
+    expect(screen.getByText('Log in')).toBeInTheDocument();
+  });
+
+  it('opens and closes the drawer when menu icon is clicked', () => {
+    (global as any).innerWidth = 500;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    render(<PublicMenuBar />);
+
+    const menuIcon = screen.getByRole('img', { name: /menu/i });
+    fireEvent.click(menuIcon);
+    expect(screen.getByTestId('mobile-menu-true')).toBeInTheDocument();
+
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
+    expect(screen.getByTestId('mobile-menu-false')).toBeInTheDocument();
+  });
+
+  it('renders login button outside the drawer when not mobile', () => {
+    (global as any).innerWidth = 800;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    render(<PublicMenuBar />);
+    expect(screen.getByText('Log in')).toBeInTheDocument();
+  });
+
+  it('navigates to login page when login button is clicked', () => {
+    render(<PublicMenuBar />);
 
     const loginButton = screen.getByText('Log in');
     fireEvent.click(loginButton);
-
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/login');
-    });
-  });
-
-  it('handles resize correctly', async () => {
-    act(() => {
-      (window as any).innerWidth = 800; // Mocking non-mobile width
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    render(
-      <MemoryRouter>
-        <PublicMenuBar />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText('Log in')).toBeInTheDocument();
+    expect(NavigateTo).toHaveBeenCalledWith('/login');
   });
 });

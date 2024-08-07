@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigateTo } from '../utils/NavigateTo';
+import { NavigateTo } from '../../utils/NavigateTo';
 
 const Logout: React.FC = () => {
   React.useEffect(() => {

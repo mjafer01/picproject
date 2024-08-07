@@ -1,10 +1,10 @@
 type PicCardProps = {
   imageSRC: string;
   title: string;
-  username: string;
+  username?: string;
   index: number;
   pictureId: number;
-  date: string;
+  date?: string;
   isFavorite?: boolean;
   onFavoriteUpdate?: (index: number, pictureId: number) => void;
 };

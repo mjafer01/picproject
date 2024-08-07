@@ -54,7 +54,7 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
         !lastApiResponse.current.hasNextPage
       )
         return;
-      toast.promise(getAllPictures, {
+      await toast.promise(getAllPictures, {
         pending: 'Loading',
       });
       //await getAllPictures();
@@ -90,11 +90,15 @@ const PictureDisplayPanel: React.FC<PictureDisplayPanelProps> = ({
           key={i}
           imageSRC={pictures[i].url}
           title={pictures[i].title}
-          username={pictures[i].user.username}
+          username={pictures[i]?.user?.username}
           index={i}
           pictureId={pictures[i].id}
-          date={formatDate(pictures[i].createdAt)}
-          isFavorite={pictures[i].isFavorite}
+          date={
+            pictures[i].createdAt
+              ? formatDate(pictures[i]?.createdAt)
+              : undefined
+          }
+          isFavorite={pictures[i]?.isFavorite}
           onFavoriteUpdate={onFavoriteUpdate}
         />,
       );

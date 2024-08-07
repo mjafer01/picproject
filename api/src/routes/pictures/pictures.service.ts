@@ -28,17 +28,33 @@ export class PicturesService {
 
   async getPictures(page: number, limit: number, userId?: number): Promise<{ pictures: Picture[], totalItems: number }> {
     const offset = (page - 1) * limit;
-    const [pictures, totalItems] = await this.picturesRepository.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      skip: offset,
-      take: limit,
-      relations: ['user'],
-    });
+
+
+    const [pictures, totalItems] = await this.picturesRepository.findAndCount(userId
+      ? {
+        order: {
+          createdAt: 'DESC',
+        },
+        skip: offset,
+        take: limit,
+        relations:['user'],
+      }  // Select all columns including createdAt if userId exists
+      : {
+        select: {
+          id: true,
+          title: true,
+          url: true
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+        skip: offset,
+        take: limit,
+      });
+
 
     if (userId) {
-      const picturesWithFavorites = await Promise.all(pictures.map(async (picture) => {
+      const picturesWithFavorites = await Promise.all(pictures.map(async (picture:any) => {
         const isFavorite = await this.isFavorite(userId, picture.id);
         return { ...picture, isFavorite };
       }));

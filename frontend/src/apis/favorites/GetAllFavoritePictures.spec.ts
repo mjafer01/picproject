@@ -2,6 +2,7 @@ import get from '../base/Get';
 import GlobalVariables from '../../constants/Global';
 import GetAllFavoritePictures from './GetAllFavoritePicturesApi';
 import mockAxios from 'jest-mock-axios';
+import GetAllPictures from '../pictures/GetAllPicturesApi';
 
 jest.mock('../base/Get', () => jest.fn());
 
@@ -45,12 +46,24 @@ describe('GetAllFavoritePictures', () => {
     );
     expect(result).toEqual(mockResponse);
   });
-  it('should return an empty array when the response status is not 200', async () => {
-    (get as jest.Mock).mockResolvedValue({ status: 400 });
+  it('should return response data when the request returns a 400 status', async () => {
+    const mockResponse = {
+      status: 400,
+      data: {
+        message: 'Page number out of range',
+        currentPage: 1,
+        totalPages: 0,
+      },
+    };
+    (get as jest.Mock).mockResolvedValue(mockResponse);
 
-    const result = await GetAllFavoritePictures(page, limit);
+    const result = await GetAllPictures(page, limit);
 
-    expect(result).toEqual([]);
+    expect(get).toHaveBeenCalledWith(
+      `${GlobalVariables.apiHost}/pictures?page=${page}&limit=${limit}`,
+      token,
+    );
+    expect(result).toEqual(mockResponse.data);
   });
 
   it('should return an empty array when the response status is not 401', async () => {

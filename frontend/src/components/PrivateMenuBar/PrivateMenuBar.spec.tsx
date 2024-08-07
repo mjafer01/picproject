@@ -1,101 +1,110 @@
 import React, { act } from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import PrivateMenuBar from './PrivateMenuBar';
-import { toast } from 'react-toastify';
-import { MemoryRouter } from 'react-router-dom';
 
-jest.mock('../AppTitle/AppTitle', () => () => <div>Logo</div>);
-jest.mock('@ant-design/icons', () => ({
-  MenuOutlined: () => <div>MenuOutlined</div>,
-}));
-jest.mock('antd', () => {
-  const actualAntd = jest.requireActual('antd');
-  return {
-    ...actualAntd,
-    Drawer: ({ children, ...props }: any) => (
-      <div {...props}>
-        <div>Drawer</div>
-        {children}
+jest.mock('../AppTitle/AppTitle', () => () => <div>AppTitle</div>);
+jest.mock(
+  './PrivateMobileMenu',
+  () =>
+    ({ username, handleClick, menuTitle }: any) => (
+      <div>
+        PrivateMobileMenu - {username} - {menuTitle}
+        <button onClick={handleClick}>Show Modal</button>
       </div>
     ),
-    Modal: ({ children, ...props }: any) => (
-      <div {...props}>
-        <div>Modal</div>
-        {children}
+);
+jest.mock(
+  './PrivateDesktopMenu',
+  () =>
+    ({ username, handleClick, menuTitle }: any) => (
+      <div>
+        PrivateDesktopMenu - {username} - {menuTitle}
+        <button onClick={handleClick}>Show Modal</button>
       </div>
     ),
-    Button: ({ children, ...props }: any) => (
-      <button {...props}>
-        <div>Button</div>
-        {children}
-      </button>
+);
+jest.mock(
+  '../SharePicForm/SharePicForm',
+  () =>
+    ({ isModalVisible, handleModalCancel }: any) => (
+      <div>
+        SharePicForm - {isModalVisible ? 'Visible' : 'Hidden'}
+        {isModalVisible && (
+          <button onClick={handleModalCancel}>Close Modal</button>
+        )}
+      </div>
     ),
-  };
-});
-
-jest.mock('react-toastify', () => ({
-  toast: {
-    loading: jest.fn(),
-    dismiss: jest.fn(),
-    error: jest.fn(),
-    success: jest.fn(),
-  },
-}));
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-jest.mock('../../apis/pictures/SharePictureApi', () => jest.fn());
-
-const mockSharePictureApi =
-  require('../../apis/pictures/SharePictureApi') as any;
+);
 
 describe('PrivateMenuBar', () => {
   beforeEach(() => {
-    mockSharePictureApi.mockClear();
-    (toast.loading as jest.Mock).mockReset();
-    (toast.dismiss as jest.Mock).mockReset();
-    (toast.error as jest.Mock).mockReset();
-    (toast.success as jest.Mock).mockReset();
+    jest.clearAllMocks();
+    localStorage.setItem('username', 'testuser');
   });
 
-  it('handles logout correctly', async () => {
-    act(() => {
-      (window as any).innerWidth = 800; // Mocking non-mobile width
-      window.dispatchEvent(new Event('resize'));
-    });
-    localStorage.setItem('username', 'testuser');
-    localStorage.setItem('token', 'testtoken');
-
-    render(
-      <MemoryRouter>
-        <PrivateMenuBar />
-      </MemoryRouter>,
-    );
-
-    const logoutButton = screen.getByText('Logout');
-    fireEvent.click(logoutButton);
-
-    await sleep(500);
-
-    expect(localStorage.getItem('username')).toBeNull();
-    expect(localStorage.getItem('token')).toBeNull();
+  afterEach(() => {
+    localStorage.clear();
   });
 
-  it('displays username from localStorage', async () => {
+  it('renders AppTitle component', () => {
+    render(<PrivateMenuBar menuTitle="Home" />);
+    expect(screen.getByText('AppTitle')).toBeInTheDocument();
+  });
+
+  it('renders PrivateDesktopMenu when not mobile', () => {
+    render(<PrivateMenuBar menuTitle="Home" />);
+    expect(
+      screen.getByText('PrivateDesktopMenu - testuser - Home'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders PrivateMobileMenu when mobile', () => {
+    // Mock window.innerWidth to be mobile size
+    (global as any).innerWidth = 500;
     act(() => {
-      (window as any).innerWidth = 800; // Mocking non-mobile width
       window.dispatchEvent(new Event('resize'));
     });
+    render(<PrivateMenuBar menuTitle="Home" />);
+    expect(
+      screen.getByText('PrivateMobileMenu - testuser - Home'),
+    ).toBeInTheDocument();
+  });
 
-    localStorage.setItem('username', 'testuser');
+  it('shows and hides modal when handleClick and handleModalCancel are called', () => {
+    render(<PrivateMenuBar menuTitle="Home" />);
 
-    render(
-      <MemoryRouter>
-        <PrivateMenuBar />
-      </MemoryRouter>,
-    );
+    // Initially, modal should be hidden
+    expect(screen.getByText('SharePicForm - Hidden')).toBeInTheDocument();
 
-    await sleep(500);
-    expect(screen.getAllByText('Hi testuser').length).toBeGreaterThan(0);
+    // Show modal
+    fireEvent.click(screen.getByText('Show Modal'));
+    expect(screen.getByText('SharePicForm - Visible')).toBeInTheDocument();
+
+    // Hide modal
+    fireEvent.click(screen.getByText('Close Modal'));
+    expect(screen.getByText('SharePicForm - Hidden')).toBeInTheDocument();
+  });
+
+  it('updates isMobile state on window resize', () => {
+    render(<PrivateMenuBar menuTitle="Home" />);
+
+    // Mock window.innerWidth to be desktop size
+    (global as any).innerWidth = 800;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(
+      screen.getByText('PrivateDesktopMenu - testuser - Home'),
+    ).toBeInTheDocument();
+
+    // Mock window.innerWidth to be mobile size
+    (global as any).innerWidth = 500;
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(
+      screen.getByText('PrivateMobileMenu - testuser - Home'),
+    ).toBeInTheDocument();
   });
 });
